@@ -23,7 +23,7 @@ export class UserService {
     return userWithoutPassword;
   }
 
-  getAll() {
+  findAll() {
     console.log('This action returns all users');
     const allUsers = Array.from(users.values()).map((user) => {
       const { id, login, version, createdAt, updatedAt } = user;
@@ -37,10 +37,10 @@ export class UserService {
     if (users.has(id)) {
       const user = users.get(id);
       const { login, version, createdAt, updatedAt } = user;
-      const userWithouPassword = { id, login, version, createdAt, updatedAt };
-      console.log(`user: ${user.id}: `, userWithouPassword);
+      const userWithoutPassword = { id, login, version, createdAt, updatedAt };
+      console.log(`user: ${user.id}: `, userWithoutPassword);
 
-      return userWithouPassword;
+      return userWithoutPassword;
     }
   }
 
