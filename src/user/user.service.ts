@@ -6,10 +6,9 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
-export class UsersService {
-
+export class UserService {
   create(createUserDto: CreateUserDto) {
-    console.log('This action adds a new user')
+    console.log('This action adds a new user');
     const user = new User();
     user.id = randomUUID();
     user.login = createUserDto.login;
@@ -17,14 +16,14 @@ export class UsersService {
     const date = new Date();
     user.createdAt = date.valueOf();
     user.updatedAt = date.valueOf();
-    user.version = 1
+    user.version = 1;
     users.set(user.id, user);
     const { id, login, version, createdAt, updatedAt } = user;
     const userWithoutPassword = { id, login, version, createdAt, updatedAt };
     return userWithoutPassword;
   }
 
-  findAll() {
+  getAll() {
     console.log('This action returns all users');
     const allUsers = Array.from(users.values()).map((user) => {
       const { id, login, version, createdAt, updatedAt } = user;
@@ -39,7 +38,7 @@ export class UsersService {
       const user = users.get(id);
       const { login, version, createdAt, updatedAt } = user;
       const userWithouPassword = { id, login, version, createdAt, updatedAt };
-      console.log(`user: ${user.id}: `, userWithouPassword)
+      console.log(`user: ${user.id}: `, userWithouPassword);
 
       return userWithouPassword;
     }
@@ -56,10 +55,18 @@ export class UsersService {
         user.version += 1;
         users.set(id, user);
         const { login, version, createdAt, updatedAt } = user;
-        const userWithoutPassword = { id, login, version, createdAt, updatedAt };
+        const userWithoutPassword = {
+          id,
+          login,
+          version,
+          createdAt,
+          updatedAt,
+        };
         return userWithoutPassword;
       } else {
-        console.log(`User with id ${id} not found or old password does not match`);
+        console.log(
+          `User with id ${id} not found or old password does not match`,
+        );
         return null;
       }
     }
@@ -69,6 +76,6 @@ export class UsersService {
     console.log(`This action removes a #${id} user`);
     if (users.has(id)) {
       return users.delete(id);
-    } 
+    }
   }
 }

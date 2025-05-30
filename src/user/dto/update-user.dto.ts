@@ -4,9 +4,8 @@ import { IsEmail, IsString } from 'class-validator';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsString()
-    @IsEmail()
     login: string;
-    
+
     @IsString()
     password: string;
 }

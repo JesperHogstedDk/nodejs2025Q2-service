@@ -1,10 +1,10 @@
 import { IsString } from 'class-validator';
 export class UpdatePasswordDto implements UpdatePasswordDtoInterface {
-    @IsString()
-    oldPassword: string; // previous password
+  @IsString()
+  oldPassword: string; // previous password
 
-    @IsString()
-    newPassword: string; // new password
+  @IsString()
+  newPassword: string; // new password
 }
 
 interface UpdatePasswordDtoInterface {

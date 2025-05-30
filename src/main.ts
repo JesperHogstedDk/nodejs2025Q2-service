@@ -7,11 +7,11 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
   app.useGlobalPipes(new ValidationPipe());
-  
+
   const document: OpenAPIObject = yamljs.load('doc/api.yaml');
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('doc', app, document);
 
   process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);

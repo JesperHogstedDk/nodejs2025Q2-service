@@ -9,30 +9,30 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  Put
+  Put,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 
-@Controller('api/users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+@Controller('user')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   @HttpCode(201)
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    return this.userService.create(createUserDto);
   }
 
   @Get()
   findAll() {
-    return this.usersService.findAll();
+    return this.userService.getAll();
   }
 
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const user = this.usersService.findOne(id);
+    const user = this.userService.findOne(id);
     if (user) {
       return user;
     }
@@ -40,16 +40,23 @@ export class UsersController {
   }
 
   @Put(':id')
-  update(@Param('id', new ParseUUIDPipe()) id: string, @Body() updatePasswordDto: UpdatePasswordDto) {
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ) {
     if (!updatePasswordDto.oldPassword || !updatePasswordDto.newPassword) {
-      throw new ForbiddenException('Both old and new passwords must be provided');
+      throw new ForbiddenException(
+        'Both old and new passwords must be provided',
+      );
     }
-    const user = this.usersService.update(id, updatePasswordDto);
+    const user = this.userService.update(id, updatePasswordDto);
     if (user) {
       return user;
     }
     if (user === null) {
-      throw new ForbiddenException(`User with id ${id} old password does not match`);
+      throw new ForbiddenException(
+        `User with id ${id} old password does not match`,
+      );
     }
     throw new NotFoundException(`User with id ${id} not found`);
   }
@@ -57,7 +64,7 @@ export class UsersController {
   @Delete(':id')
   @HttpCode(204)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const foundAndDeleted = this.usersService.remove(id);
+    const foundAndDeleted = this.userService.remove(id);
     if (foundAndDeleted) {
       return;
     }
