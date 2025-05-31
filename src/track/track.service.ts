@@ -56,7 +56,7 @@ export class TrackService {
       const track = tracks.get(id);
       const trackDeleted = tracks.delete(id);
       if (trackDeleted) {
-        const tracksWithAlbums = Array.from(albums.values()).map((album) => {
+        Array.from(albums.values()).map((album) => {
           if (album.artistId && album.artistId === track.artistId) {
             album.artistId = null;
           }

@@ -1,21 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpCode,
   BadRequestException,
-  ParseUUIDPipe,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
   NotFoundException,
+  Param,
+  ParseUUIDPipe,
+  Post,
   Put,
 } from '@nestjs/common';
-import { TrackService } from './track.service';
+import { validate } from 'uuid';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { validate } from 'uuid';
+import { TrackService } from './track.service';
 
 @Controller('track')
 export class TrackController {

@@ -20,4 +20,4 @@ interface FavoritesInterface {
   tracks: string[]; // favorite tracks ids
 }
 
-export let favs: Fav = { artists: [], albums: [], tracks: [] };
+export const favs: Fav = { artists: [], albums: [], tracks: [] };

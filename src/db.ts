@@ -12,4 +12,4 @@ export const albums: Map<string, Album> = new Map();
 
 export const tracks: Map<string, Track> = new Map();
 
-export let favs: Fav = { artists: [], albums: [], tracks: [] };
+export const favs: Fav = { artists: [], albums: [], tracks: [] };

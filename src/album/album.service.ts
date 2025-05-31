@@ -53,7 +53,7 @@ export class AlbumService {
       const album = albums.get(id);
       const albumDeleted = albums.delete(id);
       if (albumDeleted) {
-        const tracksWithAlbums = Array.from(tracks.values()).map((track) => {
+        Array.from(tracks.values()).map((track) => {
           if (track.albumId && track.albumId === album.id) {
             track.albumId = null;
           }

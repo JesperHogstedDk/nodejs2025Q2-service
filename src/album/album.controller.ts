@@ -1,22 +1,21 @@
 import {
-  Controller,
-  Get,
-  Post,
+  BadRequestException,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
   ForbiddenException,
+  Get,
   HttpCode,
   NotFoundException,
-  BadRequestException,
+  Param,
   ParseUUIDPipe,
+  Post,
   Put,
 } from '@nestjs/common';
+import { validate } from 'uuid';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { validate } from 'uuid';
 
 @Controller('album')
 export class AlbumController {

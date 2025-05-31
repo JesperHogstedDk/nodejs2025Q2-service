@@ -1,4 +1,3 @@
-import { PartialType } from '@nestjs/swagger';
 export class Track implements TrackInterface {
   id: string;
   name: string;
