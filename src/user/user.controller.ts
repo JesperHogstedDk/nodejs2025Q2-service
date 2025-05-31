@@ -22,6 +22,9 @@ export class UserController {
   @Post()
   @HttpCode(201)
   create(@Body() createUserDto: CreateUserDto) {
+    if (!createUserDto.login || !createUserDto.password) {
+      throw new ForbiddenException('Username and password are required fields');
+    }
     return this.userService.create(createUserDto);
   }
 

@@ -23,6 +23,9 @@ export class ArtistController {
   @Post()
   @HttpCode(201)
   create(@Body() createArtistDto: CreateArtistDto) {
+    if (!createArtistDto.name || !createArtistDto.grammy) {
+      throw new ForbiddenException('Name and Grammy are required fields');
+    }
     return this.artistService.create(createArtistDto);
   }
 

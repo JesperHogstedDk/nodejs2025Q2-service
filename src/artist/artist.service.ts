@@ -3,7 +3,7 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { artists } from 'src/db';
 import { Artist } from './entities/artist.entity';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class ArtistService {
@@ -19,7 +19,7 @@ export class ArtistService {
   findAll() {
     console.log('`This action returns all artist`');
     const allArtists = Array.from(artists.values()).map((artist) => {
-      const { id, name, grammy } = artist;
+       const { id, name, grammy } = artist;
       return { id, name, grammy };
     });
     return allArtists;
@@ -29,8 +29,7 @@ export class ArtistService {
     console.log(`This action returns a #${id} artist`);
     if (artists.has(id)) {
       const artist = artists.get(id);
-      const { name, grammy } = artist;
-      return { id, name, grammy };
+      return artist;
     }
   }
 
@@ -38,7 +37,6 @@ export class ArtistService {
     console.log(`This action updates a #${id} artist`);
     if (artists.has(id)) {
       const artist = artists.get(id);
-      const { name, grammy } = artist;
       const updatedArtist = { ...artist, ...updateArtistDto };
       artists.set(id, updatedArtist);
       return updatedArtist;
@@ -48,8 +46,7 @@ export class ArtistService {
   remove(id: string) {
     console.log(`This action removes a #${id} artist`);
     if (artists.has(id)) {
-      artists.delete(id);
-      return true;
+      return artists.delete(id);
     }
     return false;
   }
