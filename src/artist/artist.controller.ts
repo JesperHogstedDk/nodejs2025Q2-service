@@ -9,7 +9,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  Put
+  Put,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -17,7 +17,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Controller('artist')
 export class ArtistController {
-  constructor(private readonly artistService: ArtistService) { }
+  constructor(private readonly artistService: ArtistService) {}
 
   @Post()
   @HttpCode(201)
@@ -43,8 +43,10 @@ export class ArtistController {
   }
 
   @Put(':id')
-  update(@Param('id', new ParseUUIDPipe()) id: string,
-    @Body() updateArtistDto: UpdateArtistDto) {
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateArtistDto: UpdateArtistDto,
+  ) {
     if (!updateArtistDto.name && !updateArtistDto.grammy) {
       throw new ForbiddenException(
         'At least one of name or grammy must be provided',

@@ -49,13 +49,13 @@ export class ArtistService {
       const artist = artists.get(id);
       const artistDeleted = artists.delete(id);
       if (artistDeleted) {
-        const tracksWithArtists = Array.from(tracks.values()).map(track => {
+        const tracksWithArtists = Array.from(tracks.values()).map((track) => {
           if (track.artistId && track.artistId === artist.id) {
             track.artistId = null;
           }
           tracks.set(track.id, track);
         });
-        const tracksWithAlbums = Array.from(albums.values()).map(album => {
+        const tracksWithAlbums = Array.from(albums.values()).map((album) => {
           if (album.artistId && album.artistId === artist.id) {
             album.artistId = null;
           }

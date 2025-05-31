@@ -7,7 +7,9 @@ import { AppModule } from './app.module';
 
 dotenv.config();
 if (!process.env.PORT) {
-  console.error('Environment variable "PORT" is missing. Please define it in your .env file. Exiting...');
+  console.error(
+    'Environment variable "PORT" is missing. Please define it in your .env file. Exiting...',
+  );
   process.exit(1);
 }
 const PORT = process.env.PORT;

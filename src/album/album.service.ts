@@ -7,7 +7,6 @@ import { albums, artists, tracks } from 'src/db';
 
 @Injectable()
 export class AlbumService {
-
   create(createAlbumDto: CreateAlbumDto) {
     console.log('This action adds a new album');
     const artist = artists.has(createAlbumDto.artistId);
@@ -54,7 +53,7 @@ export class AlbumService {
       const album = albums.get(id);
       const albumDeleted = albums.delete(id);
       if (albumDeleted) {
-        const tracksWithAlbums = Array.from(tracks.values()).map(track => {
+        const tracksWithAlbums = Array.from(tracks.values()).map((track) => {
           if (track.albumId && track.albumId === album.id) {
             track.albumId = null;
           }

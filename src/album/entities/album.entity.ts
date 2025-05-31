@@ -5,7 +5,6 @@ export class Album implements AlbumInterface {
   artistId: string | null;
 }
 
-
 interface AlbumInterface {
   id: string; // uuid v4
   name: string;

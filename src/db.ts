@@ -8,7 +8,7 @@ export const users: Map<string, User> = new Map();
 
 export const artists: Map<string, Artist> = new Map();
 
-export const albums: Map<string, Album> = new Map(); 
+export const albums: Map<string, Album> = new Map();
 
 export const tracks: Map<string, Track> = new Map();
 

@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Delete, Param, HttpCode, ParseUUIDPipe, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Param,
+  HttpCode,
+  ParseUUIDPipe,
+  Res,
+} from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { Response } from 'express';
 
@@ -12,7 +21,10 @@ export class FavsController {
   }
 
   @Post('track/:id')
-  async addTrack(@Param('id', new ParseUUIDPipe()) id: string, @Res() res: Response) {
+  async addTrack(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Res() res: Response,
+  ) {
     try {
       await this.favsService.addTrack(id);
       return res.status(201).json({ message: 'Track added to favorites' });
@@ -23,7 +35,10 @@ export class FavsController {
 
   @Delete('track/:id')
   @HttpCode(204)
-  async removeTrack(@Param('id', new ParseUUIDPipe()) id: string, @Res() res: Response) {
+  async removeTrack(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Res() res: Response,
+  ) {
     try {
       await this.favsService.removeTrack(id);
       return res.send();
@@ -33,7 +48,10 @@ export class FavsController {
   }
 
   @Post('album/:id')
-  async addAlbum(@Param('id', new ParseUUIDPipe()) id: string, @Res() res: Response) {
+  async addAlbum(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Res() res: Response,
+  ) {
     try {
       await this.favsService.addAlbum(id);
       return res.status(201).json({ message: 'Album added to favorites' });
@@ -44,7 +62,10 @@ export class FavsController {
 
   @Delete('album/:id')
   @HttpCode(204)
-  async removeAlbum(@Param('id', new ParseUUIDPipe()) id: string, @Res() res: Response) {
+  async removeAlbum(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Res() res: Response,
+  ) {
     try {
       await this.favsService.removeAlbum(id);
       return res.send();
@@ -54,7 +75,10 @@ export class FavsController {
   }
 
   @Post('artist/:id')
-  async addArtist(@Param('id', new ParseUUIDPipe()) id: string, @Res() res: Response) {
+  async addArtist(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Res() res: Response,
+  ) {
     try {
       await this.favsService.addArtist(id);
       return res.status(201).json({ message: 'Artist added to favorites' });
@@ -65,7 +89,10 @@ export class FavsController {
 
   @Delete('artist/:id')
   @HttpCode(204)
-  async removeArtist(@Param('id', new ParseUUIDPipe()) id: string, @Res() res: Response) {
+  async removeArtist(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Res() res: Response,
+  ) {
     try {
       await this.favsService.removeArtist(id);
       return res.send();

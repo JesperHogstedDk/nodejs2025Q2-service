@@ -1,13 +1,17 @@
-import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { albums, artists, favs, tracks } from '../db';
 
 @Injectable()
 export class FavsService {
   findAll() {
     return {
-      artists: favs.artists.map(id => artists.get(id)).filter(Boolean),
-      albums: favs.albums.map(id => albums.get(id)).filter(Boolean),
-      tracks: favs.tracks.map(id => tracks.get(id)).filter(Boolean),
+      artists: favs.artists.map((id) => artists.get(id)).filter(Boolean),
+      albums: favs.albums.map((id) => albums.get(id)).filter(Boolean),
+      tracks: favs.tracks.map((id) => tracks.get(id)).filter(Boolean),
     };
   }
 
@@ -18,8 +22,9 @@ export class FavsService {
   }
 
   async removeTrack(id: string) {
-    if (!favs.tracks.includes(id)) throw new NotFoundException('Track is not favorite');
-    favs.tracks = favs.tracks.filter(trackId => trackId !== id);
+    if (!favs.tracks.includes(id))
+      throw new NotFoundException('Track is not favorite');
+    favs.tracks = favs.tracks.filter((trackId) => trackId !== id);
   }
 
   async addAlbum(id: string) {
@@ -29,18 +34,21 @@ export class FavsService {
   }
 
   async removeAlbum(id: string) {
-    if (!favs.albums.includes(id)) throw new NotFoundException('Album is not favorite');
-    favs.albums = favs.albums.filter(albumId => albumId !== id);
+    if (!favs.albums.includes(id))
+      throw new NotFoundException('Album is not favorite');
+    favs.albums = favs.albums.filter((albumId) => albumId !== id);
   }
 
   async addArtist(id: string) {
     const artist = artists.get(id);
-    if (!artist) throw new UnprocessableEntityException('Artist does not exist');
+    if (!artist)
+      throw new UnprocessableEntityException('Artist does not exist');
     if (!favs.artists.includes(id)) favs.artists.push(id);
   }
 
   async removeArtist(id: string) {
-    if (!favs.artists.includes(id)) throw new NotFoundException('Artist is not favorite');
-    favs.artists = favs.artists.filter(artistId => artistId !== id);
+    if (!favs.artists.includes(id))
+      throw new NotFoundException('Artist is not favorite');
+    favs.artists = favs.artists.filter((artistId) => artistId !== id);
   }
 }

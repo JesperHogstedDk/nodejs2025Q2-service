@@ -1,12 +1,12 @@
-import { IsArray } from "class-validator";
+import { IsArray } from 'class-validator';
 
 export class CreateFavDto {
-    @IsArray()
-    artists: string[];
+  @IsArray()
+  artists: string[];
 
-    @IsArray()
-    albums: string[];
+  @IsArray()
+  albums: string[];
 
-    @IsArray()
-    tracks: string[];
+  @IsArray()
+  tracks: string[];
 }

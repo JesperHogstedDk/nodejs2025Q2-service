@@ -8,7 +8,7 @@ import { albums, artists, tracks } from 'src/db';
 @Injectable()
 export class TrackService {
   create(createTrackDto: CreateTrackDto) {
-    console.log("This action adds a new track");
+    console.log('This action adds a new track');
     const artistExists = artists.has(createTrackDto.artistId);
     const albumExists = albums.has(createTrackDto.albumId);
 
@@ -25,7 +25,7 @@ export class TrackService {
 
   findAll() {
     console.log(`This action returns all tracks`);
-    const allTracks = Array.from(tracks.values()).map(track => {
+    const allTracks = Array.from(tracks.values()).map((track) => {
       const { id, name, duration, albumId, artistId } = track;
       return { id, name, duration, albumId, artistId };
     });
@@ -56,7 +56,7 @@ export class TrackService {
       const track = tracks.get(id);
       const trackDeleted = tracks.delete(id);
       if (trackDeleted) {
-        const tracksWithAlbums = Array.from(albums.values()).map(album => {
+        const tracksWithAlbums = Array.from(albums.values()).map((album) => {
           if (album.artistId && album.artistId === track.artistId) {
             album.artistId = null;
           }
