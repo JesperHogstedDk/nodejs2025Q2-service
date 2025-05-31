@@ -18,7 +18,6 @@ export class AlbumService {
     album.year = createAlbumDto.year;
     album.artistId = artist ? createAlbumDto.artistId : null;
     albums.set(album.id, album);
-    console.log('albums: ', album);
     return album;
   }
 

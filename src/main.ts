@@ -1,9 +1,16 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, OpenAPIObject } from '@nestjs/swagger';
+import { OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import * as dotenv from 'dotenv';
+import * as yamljs from 'yamljs';
 import { AppModule } from './app.module';
 
-import * as yamljs from 'yamljs';
-import { ValidationPipe } from '@nestjs/common';
+dotenv.config();
+if (!process.env.PORT) {
+  console.error('Environment variable "PORT" is missing. Please define it in your .env file. Exiting...');
+  process.exit(1);
+}
+const PORT = process.env.PORT;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,7 +30,7 @@ async function bootstrap() {
     // process.exit(1);
   });
 
-  await app.listen(process.env.PORT ?? 4000);
+  await app.listen(PORT ?? 4000);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
