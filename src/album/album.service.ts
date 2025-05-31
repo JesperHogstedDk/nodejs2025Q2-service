@@ -3,7 +3,7 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
 import { randomUUID } from 'node:crypto';
-import { albums, artists } from 'src/db';
+import { albums, artists, tracks } from 'src/db';
 
 @Injectable()
 export class AlbumService {
@@ -51,23 +51,18 @@ export class AlbumService {
   remove(id: string) {
     console.log(`This action removes a #${id} album`);
     if (albums.has(id)) {
-      const artistId = albums.get(id).artistId;
+      const album = albums.get(id);
       const albumDeleted = albums.delete(id);
       if (albumDeleted) {
-        if (artistId) {
-          albums.forEach((album) => {
-            if (album.artistId) {
-              if (artistId == album.artistId) {
-                album.artistId = null;
-                albums.set(album.id, album);
-              }
-            }
-          })
-        }
+        const tracksWithAlbums = Array.from(tracks.values()).map(track => {
+          if (track.albumId && track.albumId === album.id) {
+            track.albumId = null;
+          }
+          tracks.set(track.id, track);
+        });
         return true;
       }
     }
     return false;
   }
 }
-

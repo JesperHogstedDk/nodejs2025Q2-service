@@ -53,7 +53,18 @@ export class TrackService {
   remove(id: string) {
     console.log(`This action removes a #${id} track`);
     if (tracks.has(id)) {
-      return tracks.delete(id);
+      const track = tracks.get(id);
+      const trackDeleted = tracks.delete(id);
+      if (trackDeleted) {
+        const tracksWithAlbums = Array.from(albums.values()).map(album => {
+          if (album.artistId && album.artistId === track.artistId) {
+            album.artistId = null;
+          }
+          albums.set(album.id, album);
+        });
+        return true;
+      }
     }
+    return false;
   }
 }
