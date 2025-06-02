@@ -38,8 +38,6 @@ export class UserService {
       const user = users.get(id);
       const { login, version, createdAt, updatedAt } = user;
       const userWithoutPassword = { id, login, version, createdAt, updatedAt };
-      console.log(`user: ${user.id}: `, userWithoutPassword);
-
       return userWithoutPassword;
     }
   }
