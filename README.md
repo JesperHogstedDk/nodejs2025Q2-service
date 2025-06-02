@@ -1,72 +1,61 @@
 # Home Library Service
 
-## Prerequisites
+## Description
+This project is a Node.js/NestJS-based REST API for managing users, artists, albums, tracks, and favorites.
 
-- Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+## Installation
 
-## Downloading
+1. **Clone the repository**
+   ```sh
+   git clone https://github.com/JesperHogstedDk/nodejs2025Q2-service/tree/service/development
+   cd nodejs2025Q2-service
+   ```
 
-```
-git clone {repository URL}
-```
+2. **Install dependencies**
+   ```sh
+   npm install
+   ```
 
-## Installing NPM modules
+3. **Create a `.env` file**
+   - Copy `.env.example` to `.env` and adjust variables as needed (e.g., `PORT=4000`).
 
-```
-npm install
-```
+## Running the Application
 
-## Running application
+- **Development mode**
+  ```sh
+  npm run start:dev
+  ```
 
-```
-npm start
-```
+- **Production mode**
+  ```sh
+  npm run build
+  npm start
+  ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+## Usage
+
+The API provides CRUD endpoints for Users, Artists, Albums, Tracks, and Favorites.
+
+- **Swagger/OpenAPI documentation:**  
+  When the server is running, access the documentation at:  
+  ```
+  http://localhost:4000/doc
+  ```
+
+### Example Endpoints
+
+- `GET /user` – Get all users
+- `POST /artist` – Create a new artist
+- `GET /favs` – Get all favorites
+- `POST /favs/track/:id` – Add a track to favorites
+
+See the Swagger documentation for a complete overview of all endpoints and their usage.
 
 ## Testing
 
-After application running open new terminal and enter:
+You can use tools like Postman or Swagger UI to test the API.
 
-To run all tests without authorization
+---
 
-```
-npm run test
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
-```
-
-To run all test with authorization
-
-```
-npm run test:auth
-```
-
-To run only specific test suite with authorization
-
-```
-npm run test:auth -- <path to suite>
-```
-
-### Auto-fix and format
-
-```
-npm run lint
-```
-
-```
-npm run format
-```
-
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+**Note:**  
+This application uses in-memory storage. All data will be reset when the server restarts.
