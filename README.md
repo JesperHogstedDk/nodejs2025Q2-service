@@ -3,7 +3,14 @@
 ## Description
 This project is a Node.js/NestJS-based REST API for managing users, artists, albums, tracks, and favorites.
 
-## Installation
+## Using Docker Hub
+Make sure Docker Desktop is installed  
+To run remote image in local Docker container
+```CMD
+docker run -dp 0.0.0.0:4000:4000 iesper/home-library
+```
+
+## Installation for local use and development 
 
 1. **Clone the repository**
    ```sh
@@ -59,3 +66,8 @@ You can use tools like Postman or Swagger UI to test the API.
 
 **Note:**  
 This application uses in-memory storage. All data will be reset when the server restarts.
+
+# Docker
+See Docker installation and various commands used to develop with Docker in [README-Docker.md](README-Docker.md)
+
+# Postgress
