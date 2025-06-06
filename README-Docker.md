@@ -98,3 +98,43 @@ docker push iesper/home-library
 ```CMD
 docker run -dp 0.0.0.0:4000:4000 iesper/home-library
 ```
+
+
+docker network create home-lib-app
+
+<!-- docker run -d ^
+    --network home-lib-app --network-alias postgres ^
+    -v /custom/mount:/var/lib/postgresql/data ^
+    -e POSTGRES_PASSWORD=mysecretpassword ^
+    -e PGDATA=/var/lib/postgresql/data/pgdata ^
+    postgres -->
+
+<!-- docker run -it --network home-lib-app nicolaka/netshoot -->
+
+docker run --name home-lib-app -e POSTGRES_PASSWORD=mysecretpassword -d postgres
+
+docker run -it --rm --network home-lib-app postgres psql -h postgres -U postgres
+
+# Use postgres/example user/password credentials
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

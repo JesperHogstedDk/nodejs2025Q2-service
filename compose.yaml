@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: homelibrary
+      POSTGRES_USER: homelibrary_user
+      POSTGRES_PASSWORD: supersecret
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - db_logs:/var/log/postgresql
+    networks:
+      - homelibrary-net
+
+  app:
+    build: .
+    container_name: home-library-service
+    restart: always
+    environment:
+      # Tilpas evt. til din ORM/DB config
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: homelibrary_user
+      DB_PASSWORD: supersecret
+      DB_NAME: homelibrary
+      PORT: 4000
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    networks:
+      - homelibrary-net
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - homelibrary-net
+
+volumes:
+  db_data:
+  db_logs:
+
+networks:
+  homelibrary-net:
+    driver: bridge
