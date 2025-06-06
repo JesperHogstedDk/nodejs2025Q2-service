@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
+    environment: {}
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - db_logs:/var/log/postgresql
+    networks:
+      - homelibrary-net
+
+  app:
+    build: .
+    container_name: home-library-service
+    restart: always
+    environment: {}
+    env_file:
+      - .env
+    build:
+        context: .
+        dockerfile: Dockerfile
+    container_name: home-library-service
+    restart: always
+
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    networks:
+      - homelibrary-net
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - homelibrary-net
+
+volumes:
+  db_data:
+  db_logs:
+
+networks:
+  homelibrary-net:
+    driver: bridge
