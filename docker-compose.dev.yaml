@@ -3,7 +3,6 @@ services:
     image: postgres:16
     container_name: postgres-db
     restart: always
-    environment: {}
     env_file:
       - .env
     volumes:
@@ -13,18 +12,16 @@ services:
       - homelibrary-net
 
   app:
+    # image: home-library-service-dev:latest
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: home-library-service
+    container_name: home-library-service-dev
     restart: always
     env_file:
       - .env
-    environment: {}
-    # volumes:
-    #   - .:/app
     ports:
-      - "4000:4000"
+      - "${PORT}:${PORT}"
     depends_on:
       - db
     networks:
@@ -43,7 +40,9 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - "${AMINER_PORT}:${AMINER_PORT}"
+    depends_on:
+      - db      
     networks:
       - homelibrary-net
 

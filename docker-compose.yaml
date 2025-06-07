@@ -1,0 +1,39 @@
+services:
+  db:
+    # image: my-postgres:16
+    container_name: postgres-db
+    restart: always
+    env_file:
+      - .env
+    build:
+        context: .
+        dockerfile: Dockerfile.postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - db_logs:/var/log/postgresql
+    networks:
+      - homelibrary-net
+
+  app:
+    image: home-library-service:latest
+    container_name: home-library-service
+    restart: always
+    env_file:
+      - .env
+    build:
+        context: .
+        dockerfile: Dockerfile
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - db
+    networks:
+      - homelibrary-net
+
+volumes:
+  db_data:
+  db_logs:
+
+networks:
+  homelibrary-net:
+    driver: bridge
