@@ -67,11 +67,15 @@ To run remote image in local Docker container
 ```CMD
 docker run -dp 0.0.0.0:4000:4000 iesper/home-library
 ```
+Then browse
+```
+http://localhost:4000
+```
 # Run using Docker Compose
 Make sure Docker Desktop is installed  
 ### Usage
 ```CMD
-docker compose -f docker-compose.yaml up
+docker compose up
 ```
 Browser client  
 ```
@@ -82,17 +86,29 @@ Stop watching logs press CTRL+C
 Stop containers CTRL+D  
 Remove containers
 ```CMD
-docker compose -f docker-compose.yaml down
+docker compose down
 ```
 ### Check image size
 ```
 docker image ls
 REPOSITORY                TAG       IMAGE ID       CREATED         SIZE
-home-library-service      dev       ba81b76336fb   4 minutes ago   1.13GB
-home-library-service      prod      9703a04ee255   15 hours ago    592MB
-getting-started           latest    affa2cc63bf2   2 days ago      733MB
-home-library-service-db   latest    bfcbcfb72401   2 weeks ago     617MB
-adminer                   latest    6c46ebc017ea   3 weeks ago     171MB
+home-library-service      dev       349e421a56e6   2 minutes ago    1.13GB
+home-library-service-db   latest    e982a9c17b6e   35 minutes ago   617MB
+home-library-service      prod      f3d3dcce6cdb   58 minutes ago   592MB
+getting-started           latest    affa2cc63bf2   3 days ago       733MB
+adminer                   latest    6c46ebc017ea   3 weeks ago      171MB
+mysql                     8.0       4890b3247d48   7 weeks ago      1.06GB
+nicolaka/netshoot         latest    a20c2531bf35   12 months ago    775MB
+
+```
+### Check database files and logs to be stored in volumes instead of container
+#### Browse database files
+```
+\\wsl.localhost\docker-desktop\mnt\docker-desktop-disk\data\docker\volumes\nodejs2025q2-service_db_data\_data
+```
+#### Browse database log files
+```
+\\wsl.localhost\docker-desktop\mnt\docker-desktop-disk\data\docker\volumes\nodejs2025q2-service_db_logs\_data
 ```
 
 ## Docker Development container
