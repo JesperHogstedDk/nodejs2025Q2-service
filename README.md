@@ -87,13 +87,12 @@ docker compose -f docker-compose.yaml down
 ### Check image size
 ```
 docker image ls
-REPOSITORY             TAG       IMAGE ID       CREATED         SIZE
-home-library-service   latest    8eb5875c6711   6 minutes ago   592MB
-getting-started        latest    affa2cc63bf2   2 days ago      733MB
-postgres               16        47053cd4ee3f   2 weeks ago     617MB
-adminer                latest    6c46ebc017ea   3 weeks ago     171MB
-mysql                  8.0       4890b3247d48   7 weeks ago     1.06GB
-nicolaka/netshoot      latest    a20c2531bf35   12 months ago   775MB
+REPOSITORY                TAG       IMAGE ID       CREATED         SIZE
+home-library-service      dev       ba81b76336fb   4 minutes ago   1.13GB
+home-library-service      prod      9703a04ee255   15 hours ago    592MB
+getting-started           latest    affa2cc63bf2   2 days ago      733MB
+home-library-service-db   latest    bfcbcfb72401   2 weeks ago     617MB
+adminer                   latest    6c46ebc017ea   3 weeks ago     171MB
 ```
 
 ## Docker Development container
