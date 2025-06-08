@@ -83,18 +83,30 @@ CTRL+C
 ## To share the app on Docker Hub (allready done)
 Build the local image 
 ```CMD
-docker build -t home-library .
+docker build -t home-library-service .
+```
+Login
+```
+docker login
 ```
 Tag the image
 ```CMD
 docker tag home-library iesper/home-library
+docker tag home-library-service:dev iesper/home-library-service:dev
 ```
 Then push to Docker Hub
 ```CMD
 docker push iesper/home-library
+docker push iesper/home-library-service:dev
 ```
 
 ## To run the app 
 ```CMD
 docker run -dp 0.0.0.0:4000:4000 iesper/home-library
 ```
+
+Remove volumes
+docker compose down -v
+
+With enforce build
+docker compose up --build

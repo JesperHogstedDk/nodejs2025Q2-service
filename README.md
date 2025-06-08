@@ -62,6 +62,7 @@ This application uses in-memory storage. All data will be reset when the server 
 
 
 # Docker Hub
+[Images are uploaded here](https://hub.docker.com/repositories/iesper)
 Make sure Docker Desktop is installed  
 To run remote image in local Docker container
 ```CMD
@@ -71,6 +72,7 @@ Then browse
 ```
 http://localhost:4000
 ```
+Remark that this image is only using memory database   
 # Run using Docker Compose
 Make sure Docker Desktop is installed  
 ### Usage
@@ -110,6 +112,32 @@ nicolaka/netshoot         latest    a20c2531bf35   12 months ago    775MB
 ```
 \\wsl.localhost\docker-desktop\mnt\docker-desktop-disk\data\docker\volumes\nodejs2025q2-service_db_logs\_data
 ```
+### Create an npm script for vulnerabilities scanning 
+Scan and get a report from the Trivy tool  
+   ```cmd
+   npm run scan:images
+   ```
+#### Install Trivy for Windows
+
+1. **Download Trivy from GitHub Releases:**
+   - Go to: [https://github.com/aquasecurity/trivy/releases](https://github.com/aquasecurity/trivy/releases)
+   - Download the newest Windows `.zip`-file (ie `trivy_0.50.2_Windows-64bit.zip`).
+   - Extract and place `trivy.exe` on your PATH (ie `C:\tools\trivy\trivy.exe`).
+
+2. **Test Trivy is working:**
+   ```cmd
+   trivy --version
+   ```
+
+3. **Run:**
+   ```cmd
+   npm run scan:images
+   ```
+4. **View reports:**   
+[home-library-service:prod image](trivy-home-library-service-prod.txt)  
+[home-library-service:dev image](trivy-home-library-service-dev.txt)  
+[home-library-service-db:latest image](trivy-home-library-service-db.txt)  
+[adminer:latest image](trivy-adminer.txt)
 
 ## Docker Development container
 Development with container
@@ -144,6 +172,7 @@ Browser client
 ```
 http://localhost:4000
 ```
+
 #### Adminer
 A PostgresSql data base admin tool 
 ```

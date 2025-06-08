@@ -22,7 +22,8 @@
     "test:refresh": "cross-env TEST_MODE=auth jest --testPathPattern refresh.e2e.spec.ts --noStackTrace --runInBand",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "scan:images": "trivy image -f table -o trivy-home-library-service-dev.txt home-library-service:dev && trivy image -f table -o trivy-home-library-service-db.txt home-library-service-db:latest && trivy image -f table -o trivy-home-library-service-prod.txt home-library-service:prod && trivy image -f table -o trivy-adminer.txt adminer:latest"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.16",
