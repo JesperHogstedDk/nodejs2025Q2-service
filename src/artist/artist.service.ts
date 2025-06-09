@@ -1,70 +1,66 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { albums, artists, tracks } from 'src/db';
 import { Artist } from './entities/artist.entity';
 import { randomUUID } from 'node:crypto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArtistService {
-  create(createArtistDto: CreateArtistDto) {
+  constructor(
+    @InjectRepository(Artist)
+    private readonly artistRepository: Repository<Artist>,
+  ) { }
+
+
+  async create(createArtistDto: CreateArtistDto) {
     const artist = new Artist();
     artist.id = randomUUID();
     artist.name = createArtistDto.name;
     artist.grammy = createArtistDto.grammy;
-    artists.set(artist.id, artist);
+
+    return await this.artistRepository.save(artist);
+  }
+
+  async findAll() {
+    console.log('`This action returns all artist`');
+    return await this.artistRepository.find();
+  }
+
+  async findOne(id: string) {
+    console.log(`This action returns a #${id} artist`);
+    const artist = await this.artistRepository.findOne({ where: { id } });
+    if (!artist) {
+      return null;
+    }
     return artist;
   }
 
-  findAll() {
-    console.log('`This action returns all artist`');
-    const allArtists = Array.from(artists.values()).map((artist) => {
-      const { id, name, grammy } = artist;
-      return { id, name, grammy };
-    });
-    return allArtists;
-  }
-
-  findOne(id: string) {
-    console.log(`This action returns a #${id} artist`);
-    if (artists.has(id)) {
-      const artist = artists.get(id);
-      return artist;
-    }
-  }
-
-  update(id: string, updateArtistDto: UpdateArtistDto) {
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
     console.log(`This action updates a #${id} artist`);
-    if (artists.has(id)) {
-      const artist = artists.get(id);
-      const updatedArtist = { ...artist, ...updateArtistDto };
-      artists.set(id, updatedArtist);
-      return updatedArtist;
+    const artist = await this.artistRepository.findOne({ where: { id } });
+    if (!artist) {
+      // throw new Error('Artist not found');
+      return null;
     }
+    Object.assign(artist, updateArtistDto);
+    return await this.artistRepository.save(artist);
   }
 
-  remove(id: string) {
-    console.log(`This action removes a #${id} artist`);
-    if (artists.has(id)) {
-      const artist = artists.get(id);
-      const artistDeleted = artists.delete(id);
-      if (artistDeleted) {
-        Array.from(tracks.values()).map((track) => {
-          if (track.artistId && track.artistId === artist.id) {
-            track.artistId = null;
-          }
-          tracks.set(track.id, track);
-        });
-        Array.from(albums.values()).map((album) => {
-          if (album.artistId && album.artistId === artist.id) {
-            album.artistId = null;
-          }
-          albums.set(album.id, album);
-        });
 
-        return true;
-      }
+  async remove(id: string) {
+    console.log(`This action removes a #${id} artist`);
+    const artist = await this.artistRepository.findOne({ where: { id } });
+    if (!artist) {
+      // throw new Error('Artist not found');
+      return false;
     }
-    return false;
+    const removedArtist = await this.artistRepository.delete(id);
+    if (removedArtist.affected > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

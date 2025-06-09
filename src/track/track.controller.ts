@@ -22,7 +22,7 @@ export class TrackController {
 
   @Post()
   @HttpCode(201)
-  create(@Body() createTrackDto: CreateTrackDto) {
+  async create(@Body() createTrackDto: CreateTrackDto) {
     if (!createTrackDto.name || !createTrackDto.duration) {
       throw new BadRequestException('Name and duration are mandatory fields');
     }
@@ -33,20 +33,20 @@ export class TrackController {
       throw new BadRequestException('ArtistId should be a UUDI or null');
     }
 
-    const track = this.trackService.create(createTrackDto);
+    const track = await this.trackService.create(createTrackDto);
     if (track) {
       return track;
     }
   }
 
   @Get()
-  findAll() {
-    return this.trackService.findAll();
+  async findAll() {
+    return await this.trackService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const track = this.trackService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const track = await this.trackService.findOne(id);
     if (track) {
       return track;
     }
@@ -54,11 +54,11 @@ export class TrackController {
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
-    const track = this.trackService.update(id, updateTrackDto);
+    const track = await this.trackService.update(id, updateTrackDto);
     if (track) {
       return track;
     }
@@ -67,8 +67,8 @@ export class TrackController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const isDeleted = this.trackService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const isDeleted = await this.trackService.remove(id);
     if (isDeleted) {
       return;
     }

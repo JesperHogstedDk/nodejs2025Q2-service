@@ -1,67 +1,68 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { randomUUID } from 'node:crypto';
+import { Repository } from 'typeorm';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
-import { randomUUID } from 'node:crypto';
-import { albums, artists, tracks } from 'src/db';
+import { ArtistService } from 'src/artist/artist.service';
 
 @Injectable()
 export class AlbumService {
-  create(createAlbumDto: CreateAlbumDto) {
+    constructor(
+      @InjectRepository(Album)
+      private readonly albumRepository: Repository<Album>,
+      private readonly artistService: ArtistService,      
+    ) { }
+
+  async create(createAlbumDto: CreateAlbumDto) {
     console.log('This action adds a new album');
-    const artist = artists.has(createAlbumDto.artistId);
+    const artistExists = await this.artistService.findOne(createAlbumDto.artistId);
 
     const album = new Album();
     album.id = randomUUID();
     album.name = createAlbumDto.name;
     album.year = createAlbumDto.year;
-    album.artistId = artist ? createAlbumDto.artistId : null;
-    albums.set(album.id, album);
+    album.artistId = artistExists ? createAlbumDto.artistId : null;
+    return await this.albumRepository.save(album);
+  }
+
+  async findAll() {
+    console.log('This action returns all album');
+    return await this.albumRepository.find();     
+  }
+
+  async findOne(id: string) {
+    console.log(`This action returns a #${id} album`);
+    const album = await this.albumRepository.findOne({ where: { id } });
+    if (!album) {
+      return null;
+    }
     return album;
   }
 
-  findAll() {
-    console.log('This action returns all album');
-    const allAlbums = Array.from(albums.values()).map((album) => {
-      const { id, name, year, artistId } = album;
-      return { id, name, year, artistId };
-    });
-    return allAlbums;
-  }
-
-  findOne(id: string) {
-    console.log(`This action returns a #${id} album`);
-    if (albums.has(id)) {
-      const album = albums.get(id);
-      return album;
-    }
-  }
-
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+  async update(id: string, updateAlbumDto: UpdateAlbumDto) {
     console.log(`This action updates a #${id} album`);
-    if (albums.has(id)) {
-      const album = albums.get(id);
-      const albumUpdated = { ...album, ...updateAlbumDto };
-      albums.set(id, albumUpdated);
-      return albumUpdated;
+    const album = await this.albumRepository.findOne({ where: { id } });
+    if (!album) {
+      // throw new Error('Album not found');
+      return null; 
     }
+    Object.assign(album, updateAlbumDto);
+    return await this.albumRepository.save(album);
   }
-
-  remove(id: string) {
+  async remove(id: string) {
     console.log(`This action removes a #${id} album`);
-    if (albums.has(id)) {
-      const album = albums.get(id);
-      const albumDeleted = albums.delete(id);
-      if (albumDeleted) {
-        Array.from(tracks.values()).map((track) => {
-          if (track.albumId && track.albumId === album.id) {
-            track.albumId = null;
-          }
-          tracks.set(track.id, track);
-        });
-        return true;
-      }
+    const album = await this.albumRepository.findOne({ where: { id } });
+    if (!album) {
+      // throw new Error('Album not found');
+      return false;
     }
-    return false;
+    const removedAlbum = await this.albumRepository.delete(id);
+    if (removedAlbum.affected > 0) {
+      return true;
+    } else {
+      return false
+    }
   }
 }

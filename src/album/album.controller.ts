@@ -23,7 +23,7 @@ export class AlbumController {
 
   @Post()
   @HttpCode(201)
-  create(@Body() createAlbumDto: CreateAlbumDto) {
+  async create(@Body() createAlbumDto: CreateAlbumDto) {
     if (!createAlbumDto.name || !createAlbumDto.year) {
       throw new BadRequestException('Name and year are required fields');
     }
@@ -36,20 +36,20 @@ export class AlbumController {
       throw new BadRequestException('artistId should be a UUID or null');
     }
 
-    const album = this.albumService.create(createAlbumDto);
+    const album = await this.albumService.create(createAlbumDto);
     if (album) {
       return album;
     }
   }
 
   @Get()
-  findAll() {
-    return this.albumService.findAll();
+  async findAll() {
+    return await this.albumService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const album = this.albumService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const album = await this.albumService.findOne(id);
     if (album) {
       return album;
     }
@@ -57,7 +57,7 @@ export class AlbumController {
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
@@ -66,7 +66,7 @@ export class AlbumController {
         'At least one of name and year are required',
       );
     }
-    const album = this.albumService.update(id, updateAlbumDto);
+    const album = await this.albumService.update(id, updateAlbumDto);
     if (album) {
       return;
     }
@@ -75,8 +75,8 @@ export class AlbumController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const foundAndDeleted = this.albumService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const foundAndDeleted = await this.albumService.remove(id);
     if (foundAndDeleted) {
       return;
     }
