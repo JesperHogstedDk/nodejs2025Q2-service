@@ -9,11 +9,11 @@ import { ArtistService } from 'src/artist/artist.service';
 
 @Injectable()
 export class AlbumService {
-    constructor(
-      @InjectRepository(Album)
-      private readonly albumRepository: Repository<Album>,
-      private readonly artistService: ArtistService,      
-    ) { }
+  constructor(
+    @InjectRepository(Album)
+    private readonly albumRepository: Repository<Album>,
+    private readonly artistService: ArtistService,
+  ) { }
 
   async create(createAlbumDto: CreateAlbumDto) {
     console.log('This action adds a new album');
@@ -29,7 +29,7 @@ export class AlbumService {
 
   async findAll() {
     console.log('This action returns all album');
-    return await this.albumRepository.find();     
+    return await this.albumRepository.find();
   }
 
   async findOne(id: string) {
@@ -45,8 +45,7 @@ export class AlbumService {
     console.log(`This action updates a #${id} album`);
     const album = await this.albumRepository.findOne({ where: { id } });
     if (!album) {
-      // throw new Error('Album not found');
-      return null; 
+      return null;
     }
     Object.assign(album, updateAlbumDto);
     return await this.albumRepository.save(album);
@@ -54,15 +53,10 @@ export class AlbumService {
   async remove(id: string) {
     console.log(`This action removes a #${id} album`);
     const album = await this.albumRepository.findOne({ where: { id } });
-    if (!album) {
-      // throw new Error('Album not found');
-      return false;
+    if (album) {
+      await this.albumRepository.remove(album);
+      return true
     }
-    const removedAlbum = await this.albumRepository.delete(id);
-    if (removedAlbum.affected > 0) {
-      return true;
-    } else {
-      return false
-    }
+    return false
   }
 }
