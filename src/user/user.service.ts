@@ -41,6 +41,10 @@ export class UserService {
     console.log(`This action returns a #${id} user`);
     try {
       const user = await this.userRepository.findOne({ where: { id } });
+      if (!user) {
+        console.log(`User with id ${id} not found`);
+        return null;
+      }
       const { login, version, createdAt, updatedAt } = user;
       const userWithoutPassword = { id, login, version, createdAt, updatedAt };
       return userWithoutPassword;

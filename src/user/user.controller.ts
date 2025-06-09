@@ -17,7 +17,7 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   @HttpCode(201)
@@ -45,13 +45,18 @@ export class UserController {
   @Put(':id')
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() updatePasswordDto: UpdatePasswordDto,
-  ) {
+    @Body() updatePasswordDto: UpdatePasswordDto,) {
+
+    if (!await this.userService.findOne(id)) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
     if (!updatePasswordDto.oldPassword || !updatePasswordDto.newPassword) {
       throw new ForbiddenException(
         'Both old and new passwords must be provided',
       );
     }
+
     const user = await this.userService.update(id, updatePasswordDto);
     if (user) {
       return user;
@@ -61,7 +66,6 @@ export class UserController {
         `User with id ${id} old password does not match`,
       );
     }
-    throw new NotFoundException(`User with id ${id} not found`);
   }
 
   @Delete(':id')

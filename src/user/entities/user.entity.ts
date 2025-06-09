@@ -14,11 +14,24 @@ export class User {
   @Column()
   version: number;
 
-  @Column({ type: 'bigint' }) // eller brug 'timestamp' hvis du vil gemme som dato
-  createdAt: number;
+@Column({
+  type: 'bigint',
+  transformer: {
+    to: (value: number) => value,
+    from: (value: string) => Number(value),
+  },
+})
+createdAt: number;
 
-  @Column({ type: 'bigint' }) // eller brug 'timestamp'
-  updatedAt: number;
+@Column({
+  type: 'bigint',
+  transformer: {
+    to: (value: number) => value,
+    from: (value: string) => Number(value),
+  },
+})
+updatedAt: number;
+
 }
 
 export interface UserInterface {
