@@ -1,16 +1,28 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { randomUUID } from 'node:crypto';
+import { AlbumService } from 'src/album/album.service';
+import { ArtistService } from 'src/artist/artist.service';
+import { Repository } from 'typeorm';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/track.entity';
-import { randomUUID } from 'node:crypto';
-import { albums, artists, tracks } from 'src/db';
 
 @Injectable()
 export class TrackService {
-  create(createTrackDto: CreateTrackDto) {
+  constructor(
+    @InjectRepository(Track)
+    private readonly trackRepository: Repository<Track>,
+    private readonly albumService: AlbumService,
+    private readonly artistService: ArtistService,
+  ) {}
+
+  async create(createTrackDto: CreateTrackDto) {
     console.log('This action adds a new track');
-    const artistExists = artists.has(createTrackDto.artistId);
-    const albumExists = albums.has(createTrackDto.albumId);
+    const artistExists = await this.artistService.findOne(
+      createTrackDto.artistId,
+    );
+    const albumExists = await this.albumService.findOne(createTrackDto.albumId);
 
     const track = new Track();
     track.id = randomUUID();
@@ -18,52 +30,42 @@ export class TrackService {
     track.duration = createTrackDto.duration;
     track.albumId = albumExists ? createTrackDto.albumId : null;
     track.artistId = artistExists ? createTrackDto.artistId : null;
-    tracks.set(track.id, track);
+    await this.trackRepository.save(track);
 
     return track;
   }
 
-  findAll() {
+  async findAll() {
     console.log(`This action returns all tracks`);
-    const allTracks = Array.from(tracks.values()).map((track) => {
-      const { id, name, duration, albumId, artistId } = track;
-      return { id, name, duration, albumId, artistId };
-    });
+    const allTracks = await this.trackRepository.find();
     return allTracks;
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     console.log(`This action returns a #${id} track`);
-    if (tracks.has(id)) {
-      const track = tracks.get(id);
-      return track;
+    const track = await this.trackRepository.findOne({ where: { id } });
+    if (!track) {
+      return null;
     }
+    return track;
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
+  async update(id: string, updateTrackDto: UpdateTrackDto) {
     console.log(`This action updates a #${id} track`);
-    if (tracks.has(id)) {
-      const track = tracks.get(id);
+    const track = await this.trackRepository.findOne({ where: { id } });
+    if (track) {
       const trackUpdated = { ...track, ...updateTrackDto };
-      tracks.set(id, trackUpdated);
+      await this.trackRepository.save(trackUpdated);
       return trackUpdated;
     }
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     console.log(`This action removes a #${id} track`);
-    if (tracks.has(id)) {
-      const track = tracks.get(id);
-      const trackDeleted = tracks.delete(id);
-      if (trackDeleted) {
-        Array.from(albums.values()).map((album) => {
-          if (album.artistId && album.artistId === track.artistId) {
-            album.artistId = null;
-          }
-          albums.set(album.id, album);
-        });
-        return true;
-      }
+    const track = await this.trackRepository.findOne({ where: { id } });
+    if (track) {
+      await this.trackRepository.remove(track);
+      return true;
     }
     return false;
   }

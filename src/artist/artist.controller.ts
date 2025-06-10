@@ -21,21 +21,21 @@ export class ArtistController {
 
   @Post()
   @HttpCode(201)
-  create(@Body() createArtistDto: CreateArtistDto) {
+  async create(@Body() createArtistDto: CreateArtistDto) {
     if (!createArtistDto.name || !createArtistDto.grammy) {
       throw new ForbiddenException('Name and Grammy are required fields');
     }
-    return this.artistService.create(createArtistDto);
+    return await this.artistService.create(createArtistDto);
   }
 
   @Get()
-  findAll() {
-    return this.artistService.findAll();
+  async findAll() {
+    return await this.artistService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const artist = this.artistService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const artist = await this.artistService.findOne(id);
     if (artist) {
       return artist;
     }
@@ -43,7 +43,7 @@ export class ArtistController {
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
@@ -52,7 +52,7 @@ export class ArtistController {
         'At least one of name or grammy must be provided',
       );
     }
-    const artist = this.artistService.update(id, updateArtistDto);
+    const artist = await this.artistService.update(id, updateArtistDto);
     if (artist) {
       return;
     }
@@ -61,8 +61,8 @@ export class ArtistController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const foundAndDeleted = this.artistService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const foundAndDeleted = await this.artistService.remove(id);
     if (foundAndDeleted) {
       return;
     }

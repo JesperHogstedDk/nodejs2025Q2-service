@@ -1,0 +1,61 @@
+services:
+  db:
+    # image: postgres:16
+    image: home-library-service-db
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    container_name: home-library-service-db-dev
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - db_logs:/var/log/postgresql
+    networks:
+      - homelibrary-net
+
+  app:
+    # image: home-library-service-dev:latest
+    image: home-library-service:dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: home-library-service-app-dev
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - db
+    networks:
+      - homelibrary-net
+    develop:
+      watch:
+        - path: .
+          target: /app
+          action: sync
+          ignore:
+            - node_modules/
+            - dist/
+            - .git/
+            - logs/
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "${AMINER_PORT}:${AMINER_PORT}"
+    depends_on:
+      - db      
+    networks:
+      - homelibrary-net
+
+volumes:
+  db_data:
+  db_logs:
+
+networks:
+  homelibrary-net:
+    driver: bridge
