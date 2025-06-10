@@ -1,5 +1,5 @@
-import { Artist } from "src/artist/entities/artist.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Artist } from 'src/artist/entities/artist.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Track implements TrackInterface {
@@ -18,7 +18,10 @@ export class Track implements TrackInterface {
   @Column()
   duration: number;
 
-  @ManyToOne(() => Artist, artist => artist.tracks, { onDelete: 'SET NULL', nullable: true })
+  @ManyToOne(() => Artist, (artist) => artist.tracks, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   artist: Artist;
 }
 

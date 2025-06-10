@@ -15,8 +15,10 @@ export class Album implements AlbumInterface {
   @Column({ nullable: true })
   artistId: string | null;
 
-  
-  @ManyToOne(() => Artist, artist => artist.albums, { onDelete: 'SET NULL', nullable: true })
+  @ManyToOne(() => Artist, (artist) => artist.albums, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   artist: Artist;
 }
 

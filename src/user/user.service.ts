@@ -11,7 +11,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     console.log('This action adds a new user');
@@ -48,7 +48,6 @@ export class UserService {
       const { login, version, createdAt, updatedAt } = user;
       const userWithoutPassword = { id, login, version, createdAt, updatedAt };
       return userWithoutPassword;
-
     } catch (error) {
       console.error(`Error finding user with id ${id}:`, error);
       return null;

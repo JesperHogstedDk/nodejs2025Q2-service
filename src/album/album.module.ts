@@ -7,12 +7,13 @@ import { TrackModule } from 'src/track/track.module';
 import { ArtistModule } from 'src/artist/artist.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Album]),
-  forwardRef(() => TrackModule),
-  forwardRef(() => ArtistModule)    
+  imports: [
+    TypeOrmModule.forFeature([Album]),
+    forwardRef(() => TrackModule),
+    forwardRef(() => ArtistModule),
   ],
   controllers: [AlbumController],
   providers: [AlbumService],
   exports: [AlbumService],
 })
-export class AlbumModule { }
+export class AlbumModule {}

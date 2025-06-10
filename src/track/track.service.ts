@@ -14,13 +14,14 @@ export class TrackService {
     @InjectRepository(Track)
     private readonly trackRepository: Repository<Track>,
     private readonly albumService: AlbumService,
-    private readonly artistService: ArtistService, 
-  ) { }
-
+    private readonly artistService: ArtistService,
+  ) {}
 
   async create(createTrackDto: CreateTrackDto) {
     console.log('This action adds a new track');
-    const artistExists = await this.artistService.findOne(createTrackDto.artistId);
+    const artistExists = await this.artistService.findOne(
+      createTrackDto.artistId,
+    );
     const albumExists = await this.albumService.findOne(createTrackDto.albumId);
 
     const track = new Track();
@@ -69,4 +70,3 @@ export class TrackService {
     return false;
   }
 }
-

@@ -11,8 +11,7 @@ export class ArtistService {
   constructor(
     @InjectRepository(Artist)
     private readonly artistRepository: Repository<Artist>,
-  ) { }
-
+  ) {}
 
   async create(createArtistDto: CreateArtistDto) {
     const artist = new Artist();
@@ -47,7 +46,6 @@ export class ArtistService {
     Object.assign(artist, updateArtistDto);
     return await this.artistRepository.save(artist);
   }
-
 
   async remove(id: string) {
     console.log(`This action removes a #${id} artist`);

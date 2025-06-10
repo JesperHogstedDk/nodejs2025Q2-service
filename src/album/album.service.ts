@@ -13,11 +13,13 @@ export class AlbumService {
     @InjectRepository(Album)
     private readonly albumRepository: Repository<Album>,
     private readonly artistService: ArtistService,
-  ) { }
+  ) {}
 
   async create(createAlbumDto: CreateAlbumDto) {
     console.log('This action adds a new album');
-    const artistExists = await this.artistService.findOne(createAlbumDto.artistId);
+    const artistExists = await this.artistService.findOne(
+      createAlbumDto.artistId,
+    );
 
     const album = new Album();
     album.id = randomUUID();
@@ -55,8 +57,8 @@ export class AlbumService {
     const album = await this.albumRepository.findOne({ where: { id } });
     if (album) {
       await this.albumRepository.remove(album);
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 }

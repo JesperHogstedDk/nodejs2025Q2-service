@@ -11,7 +11,6 @@ import { User } from './user/entities/user.entity';
 import { Artist } from './artist/entities/artist.entity';
 import { Album } from './album/entities/album.entity';
 import { Track } from './track/entities/track.entity';
-import { Fav } from './favs/entities/fav.entity';
 
 @Module({
   imports: [
@@ -25,7 +24,7 @@ import { Fav } from './favs/entities/fav.entity';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([User, Artist, Album, Track]), 
+    TypeOrmModule.forFeature([User, Artist, Album, Track]),
     UserModule,
     ArtistModule,
     AlbumModule,
@@ -35,4 +34,4 @@ import { Fav } from './favs/entities/fav.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

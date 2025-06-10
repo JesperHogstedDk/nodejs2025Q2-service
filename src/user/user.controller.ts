@@ -17,7 +17,7 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   @HttpCode(201)
@@ -45,9 +45,9 @@ export class UserController {
   @Put(':id')
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() updatePasswordDto: UpdatePasswordDto,) {
-
-    if (!await this.userService.findOne(id)) {
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ) {
+    if (!(await this.userService.findOne(id))) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 

@@ -14,24 +14,23 @@ export class User {
   @Column()
   version: number;
 
-@Column({
-  type: 'bigint',
-  transformer: {
-    to: (value: number) => value,
-    from: (value: string) => Number(value),
-  },
-})
-createdAt: number;
+  @Column({
+    type: 'bigint',
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => Number(value),
+    },
+  })
+  createdAt: number;
 
-@Column({
-  type: 'bigint',
-  transformer: {
-    to: (value: number) => value,
-    from: (value: string) => Number(value),
-  },
-})
-updatedAt: number;
-
+  @Column({
+    type: 'bigint',
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => Number(value),
+    },
+  })
+  updatedAt: number;
 }
 
 export interface UserInterface {
