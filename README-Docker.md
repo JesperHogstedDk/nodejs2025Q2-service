@@ -38,7 +38,8 @@ The . at the end of the docker build command tells Docker that it should look fo
 ### Start the container locally 
 Run your container using the docker run command and specify the name of the image:
 ```cmd
-docker run -d -p 127.0.0.1:4000:4000 home-library
+docker run -d -p 127.0.0.1:4000:4000 home-library-service
+docker run -dp 0.0.0.0:8080:8080 adminer
 ```
 
 The -d flag (short for --detach) runs the container in the background. This means that Docker starts your container and returns you to the terminal prompt. Also, it does not display logs in the terminal.
@@ -46,7 +47,7 @@ The -d flag (short for --detach) runs the container in the background. This mean
 The -p flag (short for --publish) creates a port mapping between the host and the container. The -p flag takes a string value in the format of HOST:CONTAINER, where HOST is the address on the host, and CONTAINER is the port on the container. The command publishes the container's port 4000 to 127.0.0.1:4000 (localhost:4000) on the host. Without the port mapping, you wouldn't be able to access the application from the host.
 
 ### Stop the container (and delete it)
-Get the container-id of the contaioner
+Get the container-id of the container
 ```CMD
 docker ps
 ```

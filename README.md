@@ -174,17 +174,22 @@ http://localhost:4000
 ```
 
 #### Adminer
-A PostgresSql data base admin tool 
+A PostgresSql data base admin tool  
+Start and stop container  
+[See commands in README-Docker.md](README-Docker.md)
+
+Browse 
 ```
 http://localhost:8000
 ```
-Logon screen to database  
+Use these credentials   
+```
 System: PostgreSQL  
 Server: db  
 User: homelibrary_user  
 Password: supersecret  
 Database: homelibrary  
-
+```
 # Docker
 See Docker installation and various commands used to develop with Docker in [README-Docker.md](README-Docker.md)
 
