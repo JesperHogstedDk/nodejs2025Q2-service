@@ -1,11 +1,11 @@
 services:
   db:
     # image: postgres:16
-    image: home-library-service-db
+    image: home-library-service:db
     build:
       context: .
       dockerfile: Dockerfile.postgres
-    container_name: home-library-service-db-dev
+    container_name: home-library-service-db
     restart: always
     env_file:
       - .env
@@ -17,7 +17,7 @@ services:
 
   app:
     # image: home-library-service-dev:latest
-    image: home-library-service:dev
+    image: home-library-service:app
     build:
       context: .
       dockerfile: Dockerfile.dev

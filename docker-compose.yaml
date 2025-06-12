@@ -1,7 +1,6 @@
 services:
   db:
-    # image: postgres:16
-    image: home-library-service-db
+    image: iesper/home-library-service:db
     build:
       context: .
       dockerfile: Dockerfile.postgres
@@ -16,12 +15,11 @@ services:
       - homelibrary-net
 
   app:
-    # image: home-library-service:latest
-    image: home-library-service:prod
+    image: iesper/home-library-service:app
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: home-library-service
+    container_name: home-library-service-app
     restart: always
     env_file:
       - .env

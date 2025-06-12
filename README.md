@@ -3,7 +3,18 @@
 ## Description
 This project is a Node.js/NestJS-based REST API for managing users, artists, albums, tracks, and favorites.
 
+## Prerequisites
+- Git - [Download & Install Git](https://git-scm.com/downloads).
+- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker - [Download & Install Docker Desktop](https://docs.docker.com/engine/install/) (Docker + Docker Compose)
+### Install Docker Desktop
+See Docker installation and various commands used to develop with Docker in [README-Docker.md](README-Docker.md)
+
+## Postgress database
+Will only run in container, no local installation nessesary.
+
 ## Installation for local use and development 
+
 
 1. **Clone the repository**
    ```sh
@@ -37,7 +48,7 @@ This project is a Node.js/NestJS-based REST API for managing users, artists, alb
 The API provides CRUD endpoints for Users, Artists, Albums, Tracks, and Favorites.
 
 - **Swagger/OpenAPI documentation:**  
-  When the server is running, access the documentation at:  
+  Access API documentation at:  
   ```
   http://localhost:4000/doc
   ```
@@ -53,56 +64,32 @@ See the Swagger documentation for a complete overview of all endpoints and their
 
 ## Testing
 
-You can use tools like Postman or Swagger UI to test the API.
-
----
-
-<!-- **Note:**  
-This application uses in-memory storage. All data will be reset when the server restarts. -->
-
+You can use tools like Postman or Swagger UI to test the API.  
+Also you can run end-to-end test. (Make sure api is up and running)
+```
+npm run test
+```
 
 # Docker Hub
 [Images are uploaded here](https://hub.docker.com/repositories/iesper)
-Make sure Docker Desktop is installed  
-To run remote image in local Docker container
-```CMD
-docker run -dp 0.0.0.0:4000:4000 iesper/home-library
-```
-Then browse
-```
-http://localhost:4000
-```
-Remark that this image is only using memory database   
+
 # Run using Docker Compose
 Make sure Docker Desktop is installed  
 ### Usage
 ```CMD
-docker compose up
+npm run docker:up
 ```
 Browser client  
 ```
 http://localhost:4000
 ```
 You should see logs in console vindow  
-Stop watching logs press CTRL+C  
-Stop containers CTRL+D  
+Stop containers press CTRL+C  
 Remove containers
 ```CMD
-docker compose down
+npm run docker:down
 ```
-### Check image size
-```
-docker image ls
-REPOSITORY                TAG       IMAGE ID       CREATED         SIZE
-home-library-service      dev       349e421a56e6   2 minutes ago    1.13GB
-home-library-service-db   latest    e982a9c17b6e   35 minutes ago   617MB
-home-library-service      prod      f3d3dcce6cdb   58 minutes ago   592MB
-getting-started           latest    affa2cc63bf2   3 days ago       733MB
-adminer                   latest    6c46ebc017ea   3 weeks ago      171MB
-mysql                     8.0       4890b3247d48   7 weeks ago      1.06GB
-nicolaka/netshoot         latest    a20c2531bf35   12 months ago    775MB
 
-```
 ### Check database files and logs to be stored in volumes instead of container
 #### Browse database files
 ```
@@ -112,11 +99,11 @@ nicolaka/netshoot         latest    a20c2531bf35   12 months ago    775MB
 ```
 \\wsl.localhost\docker-desktop\mnt\docker-desktop-disk\data\docker\volumes\nodejs2025q2-service_db_logs\_data
 ```
-### Create an npm script for vulnerabilities scanning 
+### Npm script for vulnerabilities scanning 
 Scan and get a report from the Trivy tool  
-   ```cmd
-   npm run scan:images
-   ```
+```cmd
+npm run scan:images
+```
 #### Install Trivy for Windows
 
 1. **Download Trivy from GitHub Releases:**
@@ -139,58 +126,3 @@ Scan and get a report from the Trivy tool
 [home-library-service-db:latest image](trivy-home-library-service-db.txt)  
 [adminer:latest image](trivy-adminer.txt)
 
-## Docker Development container
-Development with container
-```CMD
-docker compose -f docker-compose.dev.yaml up
-```
-You should see logs in console vindow 
-```console
-v View in Docker Desktop   o View Config   w Enable Watch
-[12:57:11 PM] Starting compilation in watch mode...
-home-library-service  | 
-home-library-service  | [12:57:18 PM] Found 0 errors. Watching for file changes.
-home-library-service  | 
-home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [NestFactory] Starting Nest application...
-home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +64ms
-home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [InstanceLoader] AppModule dependencies initialized +0ms
-home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [InstanceLoader] ArtistModule dependencies initialized +0ms
-...
-home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [RouterExplorer] Mapped {/favs/artist/:id, DELETE} route +0ms
-home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [NestApplication] Nest application successfully started +3ms
-home-library-service  | Application is running on: http://[::1]:4000
-```
-Remember to press w to enable Watch (change some code in a file will be reflected in the running app)  
-Stop watching logs press CTRL+C 
-Stop containers CTRL+D  
-Remove containers  
-```CMD
-docker compose -f docker-compose.dev.yaml down
-```
-#### Home Library Service app
-Browser client  
-```
-http://localhost:4000
-```
-
-#### Adminer
-A PostgresSql data base admin tool  
-Start and stop container  
-[See commands in README-Docker.md](README-Docker.md)
-
-Browse 
-```
-http://localhost:8000
-```
-Use these credentials   
-```
-System: PostgreSQL  
-Server: db  
-User: homelibrary_user  
-Password: supersecret  
-Database: homelibrary  
-```
-# Docker
-See Docker installation and various commands used to develop with Docker in [README-Docker.md](README-Docker.md)
-
-# Postgress

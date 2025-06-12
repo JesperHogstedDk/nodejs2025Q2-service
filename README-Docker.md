@@ -16,6 +16,70 @@ Install with bash
 ```bash
 "Docker Desktop Installer.exe" install
 ```
+
+## Develop with Docker Development container
+Development with container
+```CMD
+docker compose -f docker-compose.dev.yaml up
+```
+You should see logs in console vindow 
+```console
+v View in Docker Desktop   o View Config   w Enable Watch
+[12:57:11 PM] Starting compilation in watch mode...
+home-library-service  | 
+home-library-service  | [12:57:18 PM] Found 0 errors. Watching for file changes.
+home-library-service  | 
+home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [NestFactory] Starting Nest application...
+home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +64ms
+home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [InstanceLoader] AppModule dependencies initialized +0ms
+home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [InstanceLoader] ArtistModule dependencies initialized +0ms
+...
+home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [RouterExplorer] Mapped {/favs/artist/:id, DELETE} route +0ms
+home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [NestApplication] Nest application successfully started +3ms
+home-library-service  | Application is running on: http://[::1]:4000
+```
+Remember to press w to enable Watch (change some code in a file will be reflected in the running app)  
+#### Home Library Service app
+Browser client  
+```
+http://localhost:4000
+```
+
+Stop watching logs press CTRL+C 
+Stop containers CTRL+D  
+Remove containers  
+```CMD
+docker compose -f docker-compose.dev.yaml down
+```
+#### Adminer
+A PostgresSql data base admin tool  
+Start and stop container  
+[See commands in README-Docker.md](README-Docker.md)
+
+Browse 
+```
+http://localhost:8000
+```
+Use these credentials   
+```
+System: PostgreSQL  
+Server: db  
+User: homelibrary_user  
+Password: supersecret  
+Database: homelibrary  
+```
+## Build image and push to to Docker Hub
+When development is ready
+```
+npm run docker:build
+```
+If image is fine 
+```
+npm run docker:push
+```
+************ The end of the in scopre documentation *********************  
+
+## Various Docker image related commands
 ### Add file .dockerignore (Is allready done in the root folder og the application)
 Files and folder that should not be added to docker  
 
@@ -108,6 +172,30 @@ docker run -dp 0.0.0.0:4000:4000 iesper/home-library
 
 Remove volumes
 docker compose down -v
+docker image prune -a
+docker volume prune
+docker network prune  
 
 With enforce build
 docker compose up --build
+
+docker compose build
+
+
+docker tag home-library-service:app iesper/home-library-service:app
+docker push iesper/home-library-service:app
+
+
+### Check image size
+```
+docker image ls
+REPOSITORY                TAG       IMAGE ID       CREATED         SIZE
+home-library-service      dev       349e421a56e6   2 minutes ago    1.13GB
+home-library-service-db   latest    e982a9c17b6e   35 minutes ago   617MB
+home-library-service      prod      f3d3dcce6cdb   58 minutes ago   592MB
+getting-started           latest    affa2cc63bf2   3 days ago       733MB
+adminer                   latest    6c46ebc017ea   3 weeks ago      171MB
+mysql                     8.0       4890b3247d48   7 weeks ago      1.06GB
+nicolaka/netshoot         latest    a20c2531bf35   12 months ago    775MB
+
+```
