@@ -1,7 +1,7 @@
 services:
   db:
     # image: postgres:16
-    image: home-library-service:db
+    image: iesper/home-library-service:db
     build:
       context: .
       dockerfile: Dockerfile.postgres

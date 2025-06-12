@@ -27,7 +27,7 @@ export class Track implements TrackInterface {
 
   @ManyToOne(() => Album, (album) => album.tracks, {
     onDelete: 'SET NULL',
-    nullable: true, 
+    nullable: true,
   })
   album: Album;
 }

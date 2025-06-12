@@ -29,7 +29,9 @@
     "docker:up": "docker compose up",
     "docker:down": "docker compose down",
     "docker:dev:up": "docker compose -f docker-compose.dev.yaml up",
-    "docker:dev:down": "docker compose -f docker-compose.dev.yaml down"
+    "docker:dev:down": "docker compose -f docker-compose.dev.yaml down",
+    "docker:dev:build": "docker compose -f docker-compose.dev.yaml up --build",
+    "docker:dev:purge": "docker compose -f docker-compose.dev.yaml down -v"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.16",

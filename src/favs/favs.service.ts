@@ -3,52 +3,117 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { albums, artists, favs, tracks } from '../db';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FavoriteArtist } from './entities/favorite-artist.entity';
+import { FavoriteAlbum } from './entities/favorite-album.entity';
+import { FavoriteTrack } from './entities/favorite-track.entity';
+import { Repository } from 'typeorm';
+// import { albums, artists, favs, tracks } from '../db';
 
 @Injectable()
 export class FavsService {
-  findAll() {
-    return {
-      artists: favs.artists.map((id) => artists.get(id)).filter(Boolean),
-      albums: favs.albums.map((id) => albums.get(id)).filter(Boolean),
-      tracks: favs.tracks.map((id) => tracks.get(id)).filter(Boolean),
-    };
+  constructor(
+    @InjectRepository(FavoriteArtist)
+    private favoriteArtistRepository: Repository<FavoriteArtist>,
+    @InjectRepository(FavoriteAlbum)
+    private favoriteAlbumRepository: Repository<FavoriteAlbum>,
+    @InjectRepository(FavoriteTrack)
+    private favoriteTrackRepository: Repository<FavoriteTrack>,
+  ) {}
+
+  async findAll() {
+    const promises = [
+      this.favoriteArtistRepository,
+      this.favoriteAlbumRepository,
+      this.favoriteTrackRepository,
+    ].map((repo) => repo.find({ relations: { favorite: true } }));
+    return await Promise.all(promises).then(([artists, albums, tracks]) => {
+      return {
+        artists: artists.map((fav) => fav.favorite),
+        albums: albums.map((fav) => fav.favorite),
+        tracks: tracks.map((fav) => fav.favorite),
+      };
+    });
   }
 
   async addTrack(id: string) {
-    const track = tracks.get(id);
-    if (!track) throw new UnprocessableEntityException('Track does not exist');
-    if (!favs.tracks.includes(id)) favs.tracks.push(id);
+    return this.favoriteTrackRepository
+      .save({
+        favorite: { id },
+      } as FavoriteTrack)
+      .catch((err) => {
+        if (err.code === '23505') {
+          throw new UnprocessableEntityException('Track already exists');
+        }
+        if (err.code === '23503') {
+          throw new UnprocessableEntityException('Track does not exist');
+        }
+        throw err;
+      });
   }
 
   async removeTrack(id: string) {
-    if (!favs.tracks.includes(id))
-      throw new NotFoundException('Track is not favorite');
-    favs.tracks = favs.tracks.filter((trackId) => trackId !== id);
+    return this.favoriteTrackRepository
+      .delete({ favorite: { id } })
+      .catch((err) => {
+        if (err.code === '23503') {
+          throw new NotFoundException('Track is not favorite');
+        }
+        throw err;
+      });
   }
 
   async addAlbum(id: string) {
-    const album = albums.get(id);
-    if (!album) throw new UnprocessableEntityException('Album does not exist');
-    if (!favs.albums.includes(id)) favs.albums.push(id);
+    return this.favoriteAlbumRepository
+      .save({
+        favorite: { id },
+      } as FavoriteAlbum)
+      .catch((err) => {
+        if (err.code === '23505') {
+          throw new UnprocessableEntityException('Album already exists');
+        }
+        if (err.code === '23503') {
+          throw new UnprocessableEntityException('Album does not exist');
+        }
+        throw err;
+      });
   }
 
   async removeAlbum(id: string) {
-    if (!favs.albums.includes(id))
-      throw new NotFoundException('Album is not favorite');
-    favs.albums = favs.albums.filter((albumId) => albumId !== id);
+    return this.favoriteAlbumRepository
+      .delete({ favorite: { id } })
+      .catch((err) => {
+        if (err.code === '23503') {
+          throw new NotFoundException('Album is not favorite');
+        }
+        throw err;
+      });
   }
 
   async addArtist(id: string) {
-    const artist = artists.get(id);
-    if (!artist)
-      throw new UnprocessableEntityException('Artist does not exist');
-    if (!favs.artists.includes(id)) favs.artists.push(id);
+    return this.favoriteArtistRepository
+      .save({
+        favorite: { id },
+      } as FavoriteArtist)
+      .catch((err) => {
+        if (err.code === '23505') {
+          throw new UnprocessableEntityException('Artist already exists');
+        }
+        if (err.code === '23503') {
+          throw new UnprocessableEntityException('Artist does not exist');
+        }
+        throw err;
+      });
   }
 
   async removeArtist(id: string) {
-    if (!favs.artists.includes(id))
-      throw new NotFoundException('Artist is not favorite');
-    favs.artists = favs.artists.filter((artistId) => artistId !== id);
+    return this.favoriteArtistRepository
+      .delete({ favorite: { id } })
+      .catch((err) => {
+        if (err.code === '23503') {
+          throw new NotFoundException('Artist is not favorite');
+        }
+        throw err;
+      });
   }
 }
