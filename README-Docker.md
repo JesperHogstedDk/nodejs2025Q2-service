@@ -22,6 +22,11 @@ Development with container
 ```CMD
 docker compose -f docker-compose.dev.yaml up
 ```
+or
+```
+npm run docker:dev:up
+```
+
 You should see logs in console vindow 
 ```console
 v View in Docker Desktop   o View Config   w Enable Watch
@@ -38,19 +43,24 @@ home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [RouterExpl
 home-library-service  | [Nest] 39  - 06/07/2025, 12:57:19 PM     LOG [NestApplication] Nest application successfully started +3ms
 home-library-service  | Application is running on: http://[::1]:4000
 ```
-Remember to press w to enable Watch (change some code in a file will be reflected in the running app)  
+You can press w to enable Watch (code change will restart the running app)   
 #### Home Library Service app
 Browser client  
 ```
 http://localhost:4000
 ```
 
-Stop watching logs press CTRL+C 
-Stop containers CTRL+D  
+Stop watching logs and stop container press CTRL+C  
 Remove containers  
-```CMD
+```
 docker compose -f docker-compose.dev.yaml down
 ```
+or
+```
+npm run docker:dev:down
+```
+
+
 #### Adminer
 A PostgresSql data base admin tool  
 Start and stop container  

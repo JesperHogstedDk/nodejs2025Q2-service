@@ -12,11 +12,22 @@ import { Artist } from './artist/entities/artist.entity';
 import { Album } from './album/entities/album.entity';
 import { Track } from './track/entities/track.entity';
 
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+console.log(
+  'AppModule loading. ',
+  'host:',
+  process.env.DB_HOST,
+  'port:',
+  parseInt(process.env.DB_PORT, 10),
+);
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
+      host: (process.env.DB_HOST || 'db').trim(),
       port: parseInt(process.env.DB_PORT, 10),
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
