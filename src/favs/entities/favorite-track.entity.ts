@@ -1,7 +1,7 @@
 import { Track } from 'src/track/entities/track.entity';
 import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'FavoriteTrack' })
 export class FavoriteTrack {
   @PrimaryGeneratedColumn()
   public id: number;

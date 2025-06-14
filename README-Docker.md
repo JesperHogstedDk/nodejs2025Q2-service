@@ -60,6 +60,19 @@ or
 npm run docker:dev:down
 ```
 
+### Create database in a new instance (or after npm run docker:dev:purge and npm run docker:dev:up)
+```
+set migrationName=bootstrapXXYY && npm run typeorm:generate
+```
+Transpile to javascript files needed for typeorm to run migration
+```
+npm run build
+```
+Execute migration in database
+```
+npm run typeorm:run
+```
+
 
 #### Adminer
 A PostgresSql data base admin tool  

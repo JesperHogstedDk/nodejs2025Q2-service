@@ -1,0 +1,36 @@
+services:
+  db:
+    # image: postgres:16
+    image: iesper/home-library-service:db
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    # container_name: home-library-service-db
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "${DB_PORT}:${DB_PORT}"  
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - db_logs:/var/log/postgresql
+    networks:
+      - homelibrary-net
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "${AMINER_PORT}:${AMINER_PORT}"
+    depends_on:
+      - db      
+    networks:
+      - homelibrary-net
+
+volumes:
+  db_data:
+  db_logs:
+
+networks:
+  homelibrary-net:
+    driver: bridge

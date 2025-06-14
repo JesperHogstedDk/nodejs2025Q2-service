@@ -1,7 +1,7 @@
 import { Artist } from 'src/artist/entities/artist.entity';
 import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'FavoriteArtist' })
 export class FavoriteArtist {
   @PrimaryGeneratedColumn()
   public id: number;

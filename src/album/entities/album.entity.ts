@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'Album' })
 export class Album implements AlbumInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string;
