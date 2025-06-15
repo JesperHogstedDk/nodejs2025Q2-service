@@ -11,6 +11,7 @@ import { Track } from './track/entities/track.entity';
 import { TrackModule } from './track/track.module';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -44,6 +45,7 @@ console.log(
     AlbumModule,
     TrackModule,
     FavsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
