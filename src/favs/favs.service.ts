@@ -21,6 +21,7 @@ export class FavsService {
   ) {}
 
   async findAll() {
+    console.log('`This action returns all favorites`');
     const promises = [
       this.favoriteArtistRepository,
       this.favoriteAlbumRepository,
