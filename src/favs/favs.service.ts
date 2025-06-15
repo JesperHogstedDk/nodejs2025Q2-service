@@ -8,7 +8,6 @@ import { FavoriteArtist } from './entities/favorite-artist.entity';
 import { FavoriteAlbum } from './entities/favorite-album.entity';
 import { FavoriteTrack } from './entities/favorite-track.entity';
 import { Repository } from 'typeorm';
-// import { albums, artists, favs, tracks } from '../db';
 
 @Injectable()
 export class FavsService {

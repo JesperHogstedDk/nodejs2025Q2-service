@@ -23,6 +23,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:src": "jest --config=jest.config.src.json",
     "scan:images": "trivy image -f table -o trivy-home-library-service-dev.txt home-library-service:dev && trivy image -f table -o trivy-home-library-service-db.txt home-library-service-db:latest && trivy image -f table -o trivy-home-library-service-prod.txt home-library-service:prod && trivy image -f table -o trivy-adminer.txt adminer:latest",
     "docker:build": "docker compose build",
     "docker:push": "docker compose build && docker compose push",
