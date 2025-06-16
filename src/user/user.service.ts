@@ -45,7 +45,7 @@ export class UserService {
 
   async findOneByName(username: string): Promise<User | undefined> {
     console.log(`This action returns a ${username} user`);
-    return await this.userRepository.findOneBy({ login: username });
+    return await this.userRepository.findOne({ where: { login: username} });
   }
 
   async findOne(id: string) {

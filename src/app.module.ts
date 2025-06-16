@@ -12,6 +12,7 @@ import { TrackModule } from './track/track.module';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -46,6 +47,7 @@ console.log(
     TrackModule,
     FavsModule,
     AuthModule,
+    JwtModule
   ],
   controllers: [AppController],
   providers: [AppService],
