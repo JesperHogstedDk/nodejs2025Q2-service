@@ -27,5 +27,6 @@
     "dist",
     ".git",
     "logs",
+    "**/*.spec.ts"
   ]
 }

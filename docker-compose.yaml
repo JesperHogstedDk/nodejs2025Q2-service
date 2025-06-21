@@ -1,14 +1,15 @@
 services:
   db:
-    # image: postgres:16
-    image: home-library-service-db
+    image: iesper/home-library-service:db
     build:
       context: .
       dockerfile: Dockerfile.postgres
-    container_name: home-library-service-db
+    # container_name: home-library-service-db
     restart: always
     env_file:
       - .env
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
     volumes:
       - db_data:/var/lib/postgresql/data
       - db_logs:/var/log/postgresql
@@ -16,12 +17,11 @@ services:
       - homelibrary-net
 
   app:
-    # image: home-library-service:latest
-    image: home-library-service:prod
+    image: iesper/home-library-service:app
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: home-library-service
+    # container_name: home-library-service-app
     restart: always
     env_file:
       - .env
@@ -29,6 +29,16 @@ services:
       - "${PORT}:${PORT}"
     depends_on:
       - db
+    networks:
+      - homelibrary-net
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "${AMINER_PORT}:${AMINER_PORT}"
+    depends_on:
+      - db      
     networks:
       - homelibrary-net
 

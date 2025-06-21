@@ -29,7 +29,15 @@ export class FavsController {
       await this.favsService.addTrack(id);
       return res.status(201).json({ message: 'Track added to favorites' });
     } catch (e) {
-      return res.status(e.status || 500).json({ message: e.message });
+      const status =
+        typeof e === 'object' && e !== null && 'status' in e
+          ? (e as any).status
+          : 500;
+      const message =
+        typeof e === 'object' && e !== null && 'message' in e
+          ? (e as any).message
+          : 'Internal server error';
+      return res.status(status).json({ message });
     }
   }
 
@@ -43,7 +51,15 @@ export class FavsController {
       await this.favsService.removeTrack(id);
       return res.send();
     } catch (e) {
-      return res.status(e.status || 500).json({ message: e.message });
+      const status =
+        typeof e === 'object' && e !== null && 'status' in e
+          ? (e as any).status
+          : 500;
+      const message =
+        typeof e === 'object' && e !== null && 'message' in e
+          ? (e as any).message
+          : 'Internal server error';
+      return res.status(status).json({ message });
     }
   }
 
@@ -56,7 +72,15 @@ export class FavsController {
       await this.favsService.addAlbum(id);
       return res.status(201).json({ message: 'Album added to favorites' });
     } catch (e) {
-      return res.status(e.status || 500).json({ message: e.message });
+      const status =
+        typeof e === 'object' && e !== null && 'status' in e
+          ? (e as any).status
+          : 500;
+      const message =
+        typeof e === 'object' && e !== null && 'message' in e
+          ? (e as any).message
+          : 'Internal server error';
+      return res.status(status).json({ message });
     }
   }
 
@@ -70,7 +94,15 @@ export class FavsController {
       await this.favsService.removeAlbum(id);
       return res.send();
     } catch (e) {
-      return res.status(e.status || 500).json({ message: e.message });
+      const status =
+        typeof e === 'object' && e !== null && 'status' in e
+          ? (e as any).status
+          : 500;
+      const message =
+        typeof e === 'object' && e !== null && 'message' in e
+          ? (e as any).message
+          : 'Internal server error';
+      return res.status(status).json({ message });
     }
   }
 
@@ -83,7 +115,15 @@ export class FavsController {
       await this.favsService.addArtist(id);
       return res.status(201).json({ message: 'Artist added to favorites' });
     } catch (e) {
-      return res.status(e.status || 500).json({ message: e.message });
+      const status =
+        typeof e === 'object' && e !== null && 'status' in e
+          ? (e as any).status
+          : 500;
+      const message =
+        typeof e === 'object' && e !== null && 'message' in e
+          ? (e as any).message
+          : 'Internal server error';
+      return res.status(status).json({ message });
     }
   }
 
@@ -97,7 +137,15 @@ export class FavsController {
       await this.favsService.removeArtist(id);
       return res.send();
     } catch (e) {
-      return res.status(e.status || 500).json({ message: e.message });
+      const status =
+        typeof e === 'object' && e !== null && 'status' in e
+          ? (e as any).status
+          : 500;
+      const message =
+        typeof e === 'object' && e !== null && 'message' in e
+          ? (e as any).message
+          : 'Internal server error';
+      return res.status(status).json({ message });
     }
   }
 }

@@ -1,7 +1,8 @@
+import { Album } from 'src/album/entities/album.entity';
 import { Artist } from 'src/artist/entities/artist.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'Track' })
 export class Track implements TrackInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -23,6 +24,12 @@ export class Track implements TrackInterface {
     nullable: true,
   })
   artist: Artist;
+
+  @ManyToOne(() => Album, (album) => album.tracks, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  album: Album;
 }
 
 interface TrackInterface {

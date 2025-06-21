@@ -17,33 +17,6 @@ services:
     networks:
       - homelibrary-net
 
-  app:
-    # image: home-library-service-dev:latest
-    image: home-library-service:app
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    # container_name: home-library-service-app-dev
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - "${PORT}:${PORT}"
-    depends_on:
-      - db
-    networks:
-      - homelibrary-net
-    develop:
-      watch:
-        - path: .
-          target: /app
-          action: sync
-          ignore:
-            - node_modules/
-            - dist/
-            - .git/
-            - logs/
-
   adminer:
     image: adminer
     restart: always

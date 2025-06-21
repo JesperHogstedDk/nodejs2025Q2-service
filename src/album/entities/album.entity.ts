@@ -1,7 +1,14 @@
 import { Artist } from 'src/artist/entities/artist.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Track } from 'src/track/entities/track.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 
-@Entity()
+@Entity({ name: 'Album' })
 export class Album implements AlbumInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -20,6 +27,9 @@ export class Album implements AlbumInterface {
     nullable: true,
   })
   artist: Artist;
+
+  @OneToMany(() => Track, (track) => track.album)
+  tracks: Track[];
 }
 
 interface AlbumInterface {

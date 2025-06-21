@@ -14,6 +14,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UserService } from './user.service';
+import { User } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
@@ -25,7 +26,11 @@ export class UserController {
     if (!createUserDto.login || !createUserDto.password) {
       throw new ForbiddenException('Username and password are required fields');
     }
-    return await this.userService.create(createUserDto);
+    const user = await this.userService.create(createUserDto);
+    if(user){
+      return user;
+    }
+     return null;
   }
 
   @Get()
@@ -37,6 +42,7 @@ export class UserController {
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const user = await this.userService.findOne(id);
     if (user) {
+
       return user;
     }
     throw new NotFoundException(`User with id ${id} not found`);
