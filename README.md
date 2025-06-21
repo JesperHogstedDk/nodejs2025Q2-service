@@ -19,7 +19,8 @@ Will only run in container, no local installation nessesary.
    ```sh
    git clone https://github.com/JesperHogstedDk/nodejs2025Q2-service/tree/service/development
    cd nodejs2025Q2-service
-   ```
+   ```  
+   and select the service-part-3/development branch  
 
 2. **Install dependencies**
    ```sh
@@ -31,11 +32,20 @@ Will only run in container, no local installation nessesary.
 
 ## Running the Application
 
-Make sure database is running  
+Start database image in container  
 ```sh
-   npm run docker:dev:up
+   npm run docker:db:up
   ```
-Run locally  
+Create database structure in a new command prompt
+```sh
+   npm run typeorm:run
+  ```
+If problems with old images, volumes, containers are not interfearing you can try.
+```sh
+   docker compose down -v
+   docker system prune -a   
+  ```  
+Run locally in a third new prompt  
 - **Development mode**  
 ```sh
   npm run start:dev
