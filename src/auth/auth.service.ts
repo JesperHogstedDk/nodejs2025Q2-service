@@ -4,14 +4,14 @@ import { UserService } from 'src/user/user.service';
 import { JwtPayloadDto } from 'src/auth/dto/jwt-payload.dto';
 import { JwtTokensResponseDto } from 'src/auth/dto/jwt-tokens-response.dto';
 
-
 @Injectable()
 export class AuthService {
   private accessTokenOptions: JwtSignOptions;
   private refreshTokenOptions: JwtSignOptions;
   constructor(
     private usersService: UserService,
-    private jwtService: JwtService) {
+    private jwtService: JwtService,
+  ) {
     this.accessTokenOptions = {
       expiresIn: process.env.TOKEN_EXPIRE_TIME ?? '1h',
       secret: process.env.JWT_SECRET_KEY ?? 'secret123123',
@@ -32,7 +32,6 @@ export class AuthService {
 
     return { accessToken, refreshToken };
   }
-
 
   // async signIn(username: string, pass: string): Promise<any> {
   //   console.log("signIn action return a new accesstoken.")

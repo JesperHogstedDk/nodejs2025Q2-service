@@ -47,7 +47,7 @@ console.log(
     TrackModule,
     FavsModule,
     AuthModule,
-    JwtModule
+    JwtModule,
   ],
   controllers: [AppController],
   providers: [AppService],

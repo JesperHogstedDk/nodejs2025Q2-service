@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -15,6 +16,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
+import { QueryFailedError } from 'typeorm';
+import { DatabaseError } from 'pg-protocol';
 
 @Controller('user')
 export class UserController {
@@ -26,11 +29,24 @@ export class UserController {
     if (!createUserDto.login || !createUserDto.password) {
       throw new ForbiddenException('Username and password are required fields');
     }
-    const user = await this.userService.create(createUserDto);
-    if(user){
-      return user;
-    }
-     return null;
+ return await this.userService.create(createUserDto);
+    // try {
+    //   const entity = await this.userService.create(createUserDto);
+    //   if (entity) {
+    //     return entity;
+    //   }
+    // } catch (error) {
+    //   // if (error.code === "23502") {
+    //   //   return new BadRequestException('This login is not null')
+    //   // }
+    //   // if (error.code === "23505") {
+    //   //   return new BadRequestException('This login is not unique')
+    //   // }
+    //   // if (error.detail?.includes('already exists')) {
+    //   //   return new BadRequestException('This login is not unique')
+    //   // }
+    //   return error;
+    // }
   }
 
   @Get()
@@ -40,10 +56,9 @@ export class UserController {
 
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const user = await this.userService.findOne(id);
-    if (user) {
-
-      return user;
+    const entity = await this.userService.findOne({ id });
+    if (entity) {
+      return entity;
     }
     throw new NotFoundException(`User with id ${id} not found`);
   }
@@ -53,7 +68,7 @@ export class UserController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
-    if (!(await this.userService.findOne(id))) {
+    if (!(await this.userService.findOne({ id }))) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 
@@ -77,10 +92,12 @@ export class UserController {
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const foundAndDeleted = await this.userService.remove(id);
-    if (foundAndDeleted) {
-      return;
+    const entity: User | null = await this.userService.findOne({ id });
+
+    if (!entity) {
+      throw new NotFoundException(`User with id ${id} not found`);
     }
-    throw new NotFoundException(`User with id ${id} not found`);
+
+    await this.userService.remove(entity);
   }
 }

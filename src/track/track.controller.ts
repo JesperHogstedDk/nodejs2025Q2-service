@@ -32,11 +32,11 @@ export class TrackController {
     if (createTrackDto.artistId && !validate(createTrackDto.artistId)) {
       throw new BadRequestException('ArtistId should be a UUDI or null');
     }
-
-    const track = await this.trackService.create(createTrackDto);
-    if (track) {
-      return track;
-    }
+    return await this.trackService.create(createTrackDto);
+    // const track = await this.trackService.create(createTrackDto);
+    // if (track) {
+    //   return track;
+    // }
   }
 
   @Get()

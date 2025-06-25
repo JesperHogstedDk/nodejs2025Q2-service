@@ -6,14 +6,14 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   login: string;
 
   @Column()
   @Exclude()
   password: string;
 
-  @VersionColumn()
+  @Column({ type: 'int', default: 1 })
   version: number;
 
   @Column({
@@ -33,6 +33,10 @@ export class User {
     },
   })
   updatedAt: number;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }
 
 export interface UserInterface {
