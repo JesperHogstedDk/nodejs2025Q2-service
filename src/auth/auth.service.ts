@@ -1,16 +1,23 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
 import { JwtPayloadDto } from 'src/auth/dto/jwt-payload.dto';
 import { JwtTokensResponseDto } from 'src/auth/dto/jwt-tokens-response.dto';
+import { UserService } from 'src/user/user.service';
+import { LogInDto } from './dto/log-in.dto';
+import { SignUpDto } from './dto/sign-up.dto';
 
 @Injectable()
 export class AuthService {
   private accessTokenOptions: JwtSignOptions;
   private refreshTokenOptions: JwtSignOptions;
+
   constructor(
-    private usersService: UserService,
     private jwtService: JwtService,
+    private readonly userService: UserService,
   ) {
     this.accessTokenOptions = {
       expiresIn: process.env.TOKEN_EXPIRE_TIME ?? '1h',
@@ -22,7 +29,60 @@ export class AuthService {
     };
   }
 
-  async generateTokenPair(
+  async signUp(signUpDto: SignUpDto) {
+    const entity = await this.userService.findOneByName(signUpDto.login);
+    if (entity) {
+      throw new ForbiddenException('user allready exists');
+    }
+    return await this.userService.create({
+      login: signUpDto.login,
+      password: signUpDto.password,
+    });
+  }
+
+  async login(logInDto: LogInDto) {
+    const entity = await this.userService.findOneByName(logInDto.login);
+    if (!entity) {
+      throw new ForbiddenException('no user with such login');
+    }
+
+    const isAllowed = await this.userService.verifyPassword(
+      logInDto.password,
+      entity.password,
+    );
+
+    if (!isAllowed) {
+      throw new UnauthorizedException("password doesn't match actual done");
+    }
+
+    return this.generateTokenPair({ userId: entity.id, login: entity.login });
+  }
+
+  async refresh(refreshToken: string) {
+    let jwtPayloadDto: JwtPayloadDto;
+
+    try {
+      jwtPayloadDto = await this.jwtService.verify(refreshToken, {
+        secret: this.refreshTokenOptions.secret,
+        clockTolerance: 0,
+      });
+    } catch (error) {
+      console.log('error', error.message);
+      if (error.name === 'JsonWebTokenError') {
+        throw new ForbiddenException(error);
+      }
+      if (error.name === 'TokenExpiredError') {
+        throw new ForbiddenException(error);
+      }
+    }
+
+    return await this.generateTokenPair({
+      userId: jwtPayloadDto.userId,
+      login: jwtPayloadDto.login,
+    });
+  }
+
+  private async generateTokenPair(
     payload: JwtPayloadDto,
   ): Promise<JwtTokensResponseDto> {
     const [accessToken, refreshToken] = await Promise.all([
@@ -32,16 +92,4 @@ export class AuthService {
 
     return { accessToken, refreshToken };
   }
-
-  // async signIn(username: string, pass: string): Promise<any> {
-  //   console.log("signIn action return a new accesstoken.")
-  //   const user = await this.usersService.findOneByName(username);
-  //   if (user?.password! == pass) {
-  //     throw new UnauthorizedException();
-  //   }
-  //   const payload = { sub: user.id, username: user.login };
-  //   return {
-  //     access_token: await this.jwtService.signAsync(payload),
-  //   };
-  // }
 }

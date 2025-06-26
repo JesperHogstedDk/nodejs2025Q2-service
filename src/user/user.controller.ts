@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -14,10 +13,8 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { UserService } from './user.service';
 import { User } from './entities/user.entity';
-import { QueryFailedError } from 'typeorm';
-import { DatabaseError } from 'pg-protocol';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
@@ -29,24 +26,7 @@ export class UserController {
     if (!createUserDto.login || !createUserDto.password) {
       throw new ForbiddenException('Username and password are required fields');
     }
- return await this.userService.create(createUserDto);
-    // try {
-    //   const entity = await this.userService.create(createUserDto);
-    //   if (entity) {
-    //     return entity;
-    //   }
-    // } catch (error) {
-    //   // if (error.code === "23502") {
-    //   //   return new BadRequestException('This login is not null')
-    //   // }
-    //   // if (error.code === "23505") {
-    //   //   return new BadRequestException('This login is not unique')
-    //   // }
-    //   // if (error.detail?.includes('already exists')) {
-    //   //   return new BadRequestException('This login is not unique')
-    //   // }
-    //   return error;
-    // }
+    return await this.userService.create(createUserDto);
   }
 
   @Get()

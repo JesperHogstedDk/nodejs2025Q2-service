@@ -29,18 +29,13 @@ export class ArtistService {
 
   async findOne(id: string) {
     console.log(`This action returns a #${id} artist`);
-    const artist = await this.artistRepository.findOne({ where: { id } });
-    if (!artist) {
-      return null;
-    }
-    return artist;
+    return await this.artistRepository.findOneBy({ id });
   }
 
   async update(id: string, updateArtistDto: UpdateArtistDto) {
     console.log(`This action updates a #${id} artist`);
     const artist = await this.artistRepository.findOne({ where: { id } });
     if (!artist) {
-      // throw new Error('Artist not found');
       return null;
     }
     Object.assign(artist, updateArtistDto);
@@ -51,7 +46,6 @@ export class ArtistService {
     console.log(`This action removes a #${id} artist`);
     const artist = await this.artistRepository.findOne({ where: { id } });
     if (!artist) {
-      // throw new Error('Artist not found');
       return false;
     }
     const removedArtist = await this.artistRepository.delete(id);

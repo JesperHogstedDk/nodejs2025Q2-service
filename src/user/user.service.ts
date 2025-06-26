@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -43,7 +43,7 @@ export class UserService {
   }
 
   async findOne(where: FindOptionsWhere<User>) {
-    console.log(`This action returns a #${where} user`);
+    console.log(`This action returns a #${where.id} user`);
     return await this.userRepository.findOneBy(where);
   }
 
@@ -56,20 +56,14 @@ export class UserService {
     if (
       await this.verifyPassword(updatePasswordDto.oldPassword, user.password)
     ) {
-      console.log(
-        'Password verifyed: ',
-        updatePasswordDto.oldPassword,
-        user.password,
-      );
       user.password = await this.hashPassword(updatePasswordDto.newPassword);
       user.updatedAt = Date.now();
       user.version += 1;
       const { password, ...userWithoutPassword } =
         await this.userRepository.save(user);
-      console.log('userWithoutPassword', userWithoutPassword);
       return userWithoutPassword;
     } else {
-      return null;
+      throw new ForbiddenException('Incorrect old password');
     }
   }
 

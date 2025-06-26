@@ -15,7 +15,7 @@ export class TrackService {
     private readonly trackRepository: Repository<Track>,
     private readonly albumService: AlbumService,
     private readonly artistService: ArtistService,
-  ) { }
+  ) {}
 
   async create(createTrackDto: CreateTrackDto) {
     console.log('This action adds a new track');
