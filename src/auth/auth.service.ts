@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   async signUp(signUpDto: SignUpDto) {
-    const entity = await this.userService.findOneByName(signUpDto.login);
+    const entity = await this.userService.findOneBy({ login: signUpDto.login });
     if (entity) {
       throw new ForbiddenException('user allready exists');
     }
@@ -41,7 +41,7 @@ export class AuthService {
   }
 
   async login(logInDto: LogInDto) {
-    const entity = await this.userService.findOneByName(logInDto.login);
+    const entity = await this.userService.findOneBy({ login: logInDto.login });
     if (!entity) {
       throw new ForbiddenException('no user with such login');
     }
@@ -64,7 +64,6 @@ export class AuthService {
     try {
       jwtPayloadDto = await this.jwtService.verify(refreshToken, {
         secret: this.refreshTokenOptions.secret,
-        clockTolerance: 0,
       });
     } catch (error) {
       console.log('error', error.message);
@@ -75,6 +74,8 @@ export class AuthService {
         throw new ForbiddenException(error);
       }
     }
+
+    // compare login
 
     return await this.generateTokenPair({
       userId: jwtPayloadDto.userId,

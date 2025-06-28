@@ -18,6 +18,17 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
     console.log('This action adds a new user');
+
+    /**
+     * This check cannot work with the provided version of test:auth
+     * as that test does not expects login to unique
+     * in production that check should even be moved to a database constraint 
+     */
+    // const entity = await this.findOneBy({ login: createUserDto.login });
+    // if (entity) {
+    //   throw new ForbiddenException('user allready exists');
+    // }
+
     const hashedPasword = await this.hashPassword(createUserDto.password);
     const date = Date.now();
     const user = new User({
@@ -37,14 +48,14 @@ export class UserService {
     return allUsers;
   }
 
-  async findOneByName(username: string): Promise<User | undefined> {
-    console.log(`This action returns a ${username} user`);
-    return await this.userRepository.findOne({ where: { login: username } });
+  async findOneBy(where: FindOptionsWhere<User>): Promise<User | undefined> {
+    console.log(`This action returns a ${where} user`);
+    return await this.userRepository.findOneBy(where);
   }
 
-  async findOne(where: FindOptionsWhere<User>) {
-    console.log(`This action returns a #${where.id} user`);
-    return await this.userRepository.findOneBy(where);
+  async findOne(id: string) {
+    console.log(`This action returns a #${id} user`);
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   async update(id: string, updatePasswordDto: UpdatePasswordDto) {

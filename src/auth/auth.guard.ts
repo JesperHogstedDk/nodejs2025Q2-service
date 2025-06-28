@@ -12,7 +12,8 @@ export class AuthGuard implements CanActivate {
   ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const { url } = context.switchToHttp().getRequest();
+    if (url === '/') return true;
 
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
@@ -21,9 +22,8 @@ export class AuthGuard implements CanActivate {
     if (isPublic) {
       return true;
     }
-    if (request.url === ('/')) return true;
 
-
+    const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request)
     if (!token) {
       throw new UnauthorizedException('No token in header');
@@ -33,8 +33,6 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(
         token, { secret: process.env.JWT_SECRET_KEY }
       );
-      console.log('payload:', payload);
-      // payload
       request['user'] = payload;
     } catch (error) {
       throw new UnauthorizedException('Token not valid');

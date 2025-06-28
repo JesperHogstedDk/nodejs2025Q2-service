@@ -88,9 +88,10 @@ See the Swagger documentation for a complete overview of all endpoints and their
 You can use tools like Postman or Swagger UI to test the API.  
 Also you can run end-to-end test. (Make sure api is up and running)
 ```sh
-   npm run test
+   npm run test:auth
+   npm run test:refresh
    ```
-
+In case test partly fails, it might be that the database is coorupt, clean all tables or at least user except migrations and try again  
 # Run Api in container using Docker Compose
 Make sure Docker Desktop is installed  
 ### Usage

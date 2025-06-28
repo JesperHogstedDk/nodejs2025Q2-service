@@ -18,7 +18,7 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   @HttpCode(201)
@@ -36,7 +36,7 @@ export class UserController {
 
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const entity = await this.userService.findOne({ id });
+    const entity = await this.userService.findOne( id );
     if (entity) {
       return entity;
     }
@@ -48,7 +48,7 @@ export class UserController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
-    if (!(await this.userService.findOne({ id }))) {
+    if (!(await this.userService.findOne(id))) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 
@@ -72,7 +72,7 @@ export class UserController {
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const entity: User | null = await this.userService.findOne({ id });
+    const entity: User | null = await this.userService.findOne(id);
 
     if (!entity) {
       throw new NotFoundException(`User with id ${id} not found`);
