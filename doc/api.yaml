@@ -745,7 +745,6 @@ info:
     2. Login with your `login` and `password` and get tokens via `auth/login`
 
     3. Press `Authorize` button and use your `accessToken`
-        > ![Authorization](https://github.com/EternalRival/nodejs2023Q2-service/assets/59611223/22d81d77-efe9-41cb-9e4e-20358ee9fe4f)
   version: 1.2.0
   contact: {}
 tags: []

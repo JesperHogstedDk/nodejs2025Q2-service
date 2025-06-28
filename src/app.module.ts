@@ -19,9 +19,10 @@ dotenv.config();
 
 console.log(
   'AppModule loading. ',
-  'host:',
+  'host port:', process.env.PORT,
+  'db host:',
   process.env.DB_HOST,
-  'port:',
+  'db port:',
   parseInt(process.env.DB_PORT || '5432', 10),
 );
 
