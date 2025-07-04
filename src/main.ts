@@ -1,9 +1,12 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ConsoleLogger, Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
 import * as yamljs from 'yamljs';
 import { AppModule } from './app.module';
+import { LogService } from './log/log.service';
+import { JsonLogService } from './log/json.log.service';
+import { FileLogService } from './log/file.log.service';
 
 dotenv.config();
 if (!process.env.PORT) {
@@ -15,8 +18,20 @@ if (!process.env.PORT) {
 const PORT = process.env.PORT;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
 
+  Logger.log("Log Test")
+  Logger.warn("Log warn")
+  Logger.error("Log error")
+
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+    // logger: console
+    // logger: new LogService("home-library-service"),
+    // logger: new JsonLogService(),
+    // logger: new FileLogService("home-library-service"),
+  });
+  app.useLogger(new LogService("home-library-service"));
+  
   app.useGlobalPipes(new ValidationPipe());
 
   const document: OpenAPIObject = yamljs.load('doc/api.yaml');

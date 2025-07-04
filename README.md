@@ -20,7 +20,7 @@ Will only run in container, no local installation nessesary.
    git clone https://github.com/JesperHogstedDk/nodejs2025Q2-service/tree/service/development
    cd nodejs2025Q2-service
    ```  
-   and select the service-part-3/development branch  
+   and select the service-part-3/development branch  (or newer)
 
 2. **Install dependencies**
    ```sh
@@ -36,7 +36,7 @@ Start database image in container
 ```sh
    npm run docker:db:up
   ```
-Create database structure in a new command prompt
+Create and publish database structure in a new command prompt
 ```sh
    npm run typeorm:run
   ```
@@ -83,6 +83,9 @@ The API provides CRUD endpoints for Users, Artists, Albums, Tracks, and Favorite
 
 See the Swagger documentation for a complete overview of all endpoints and their usage.
 
+## Logging
+See logs in the console and in log files (and error log files)
+
 ## Testing
 
 You can use tools like Postman or Swagger UI to test the API.  
@@ -91,7 +94,9 @@ Also you can run end-to-end test. (Make sure api is up and running)
    npm run test:auth
    npm run test:refresh
    ```
-In case test partly fails, it might be that the database is coorupt, clean all tables or at least user except migrations and try again  
+In case test partly fails, it might corrupt the database, clean all tables specially or at least user except migrations and try again.  
+In some case it might help to clean the dist folder (prebuild), re-build and even the node modules folder.
+
 # Run Api in container using Docker Compose
 Make sure Docker Desktop is installed  
 ### Usage

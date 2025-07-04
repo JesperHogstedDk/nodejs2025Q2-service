@@ -1,24 +1,27 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import * as dotenv from 'dotenv';
 import { AlbumModule } from './album/album.module';
 import { Album } from './album/entities/album.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArtistModule } from './artist/artist.module';
 import { Artist } from './artist/entities/artist.entity';
+import { AuthModule } from './auth/auth.module';
 import { FavsModule } from './favs/favs.module';
+import { JsonLogService } from './log/json.log.service';
+import { LogService } from './log/log.service';
 import { Track } from './track/entities/track.entity';
 import { TrackModule } from './track/track.module';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { JwtModule } from '@nestjs/jwt';
+import { LogModule } from './log/log.module';
 
-import * as dotenv from 'dotenv';
 dotenv.config();
 
 console.log(
-  'AppModule loading. ',
+  'AppModule loading.',
   'host port:', process.env.PORT,
   'db host:',
   process.env.DB_HOST,
@@ -49,8 +52,9 @@ console.log(
     FavsModule,
     AuthModule,
     JwtModule,
+    LogModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -100,7 +100,7 @@ If image is fine
 ```
 npm run docker:push
 ```
-************ The end of the in scopre documentation *********************  
+************ The end of the in-scope documentation *********************  
 
 ## Various Docker image related commands
 ### Add file .dockerignore (Is allready done in the root folder og the application)

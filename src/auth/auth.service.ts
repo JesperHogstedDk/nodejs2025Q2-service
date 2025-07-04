@@ -9,6 +9,7 @@ import { JwtTokensResponseDto } from 'src/auth/dto/jwt-tokens-response.dto';
 import { UserService } from 'src/user/user.service';
 import { LogInDto } from './dto/log-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
+import { LogService } from 'src/log/log.service';
 
 @Injectable()
 export class AuthService {
@@ -16,9 +17,11 @@ export class AuthService {
   private refreshTokenOptions: JwtSignOptions;
 
   constructor(
+    private readonly logger: LogService,
     private jwtService: JwtService,
     private readonly userService: UserService,
   ) {
+    logger.setContext('AuthService');
     this.accessTokenOptions = {
       expiresIn: process.env.TOKEN_EXPIRE_TIME ?? '1h',
       secret: process.env.JWT_SECRET_KEY ?? 'secret123123',
@@ -30,6 +33,8 @@ export class AuthService {
   }
 
   async signUp(signUpDto: SignUpDto) {
+    // console.log('This action signup a new user ');
+     this.logger.log('This action signup a new user');
     const entity = await this.userService.findOneBy({ login: signUpDto.login });
     if (entity) {
       throw new ForbiddenException('user allready exists');
@@ -41,6 +46,7 @@ export class AuthService {
   }
 
   async login(logInDto: LogInDto) {
+    this.logger.log(`This action login a user: ${logInDto.login}`);    
     const entity = await this.userService.findOneBy({ login: logInDto.login });
     if (!entity) {
       throw new ForbiddenException('no user with such login');
@@ -59,6 +65,7 @@ export class AuthService {
   }
 
   async refresh(refreshToken: string) {
+    this.logger.log(`This action refresh a token: ${refreshToken}`);    
     let jwtPayloadDto: JwtPayloadDto;
 
     try {
