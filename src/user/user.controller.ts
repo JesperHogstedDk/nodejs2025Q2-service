@@ -18,7 +18,7 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   @HttpCode(201)
@@ -36,7 +36,7 @@ export class UserController {
 
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const entity = await this.userService.findOne( id );
+    const entity = await this.userService.findOne(id);
     if (entity) {
       return entity;
     }

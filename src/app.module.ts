@@ -10,19 +10,18 @@ import { ArtistModule } from './artist/artist.module';
 import { Artist } from './artist/entities/artist.entity';
 import { AuthModule } from './auth/auth.module';
 import { FavsModule } from './favs/favs.module';
-import { JsonLogService } from './log/json.log.service';
-import { LogService } from './log/log.service';
+import { LogModule } from './log/log.module';
 import { Track } from './track/entities/track.entity';
 import { TrackModule } from './track/track.module';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
-import { LogModule } from './log/log.module';
 
 dotenv.config();
 
 console.log(
   'AppModule loading.',
-  'host port:', process.env.PORT,
+  'host port:',
+  process.env.PORT,
   'db host:',
   process.env.DB_HOST,
   'db port:',
@@ -52,9 +51,9 @@ console.log(
     FavsModule,
     AuthModule,
     JwtModule,
-    LogModule
+    LogModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

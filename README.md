@@ -84,7 +84,8 @@ The API provides CRUD endpoints for Users, Artists, Albums, Tracks, and Favorite
 See the Swagger documentation for a complete overview of all endpoints and their usage.
 
 ## Logging
-See logs in the console and in log files (and error log files)
+See logs in the console and in log files (and error log files)   
+WARNING: running with environment variable LOG_LEVEL set to debug will reveal password
 
 ## Testing
 

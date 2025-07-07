@@ -1,12 +1,12 @@
-import { ConsoleLogger, Logger, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
 import * as yamljs from 'yamljs';
 import { AppModule } from './app.module';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { LogService } from './log/log.service';
-import { JsonLogService } from './log/json.log.service';
-import { FileLogService } from './log/file.log.service';
+import { RequestResponseLoggerInterceptor } from './log/request-response-logger.interceptor';
 
 dotenv.config();
 if (!process.env.PORT) {
@@ -18,36 +18,30 @@ if (!process.env.PORT) {
 const PORT = process.env.PORT;
 
 async function bootstrap() {
-
-  Logger.log("Log Test")
-  Logger.warn("Log warn")
-  Logger.error("Log error")
-
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
-    // logger: console
-    // logger: new LogService("home-library-service"),
-    // logger: new JsonLogService(),
-    // logger: new FileLogService("home-library-service"),
   });
-  app.useLogger(new LogService("home-library-service"));
-  
+  const logger = await app.resolve(LogService);
+  logger.setContext('home-library-service');
+  // app.useLogger(logger);
+
+  app.useGlobalInterceptors(new RequestResponseLoggerInterceptor(logger));
+  app.useGlobalFilters(new AllExceptionsFilter(logger));
+
   app.useGlobalPipes(new ValidationPipe());
 
   const document: OpenAPIObject = yamljs.load('doc/api.yaml');
   SwaggerModule.setup('doc', app, document);
 
   process.on('uncaughtException', (error) => {
-    console.error('Uncaught Exception:', error);
-    // process.exit(1);
+    logger.logException(error, 'Bootstrap');
   });
 
-  process.on('unhandledRejection', (reason) => {
-    console.error('Unhandled Rejection:', reason);
-    // process.exit(1);
+  process.on('unhandledRejection', (reason, promise) => {
+    logger.logException(reason, 'UnhandledRejection');
+    logger.debug(`Promise type: ${promise?.constructor?.name ?? 'Unknown'}`);
   });
 
   await app.listen(PORT ?? 4000);
-  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();

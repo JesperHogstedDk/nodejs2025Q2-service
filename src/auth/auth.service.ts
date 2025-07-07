@@ -33,8 +33,7 @@ export class AuthService {
   }
 
   async signUp(signUpDto: SignUpDto) {
-    // console.log('This action signup a new user ');
-     this.logger.log('This action signup a new user');
+    this.logger.log('This action signup a new user');
     const entity = await this.userService.findOneBy({ login: signUpDto.login });
     if (entity) {
       throw new ForbiddenException('user allready exists');
@@ -46,7 +45,7 @@ export class AuthService {
   }
 
   async login(logInDto: LogInDto) {
-    this.logger.log(`This action login a user: ${logInDto.login}`);    
+    this.logger.log(`This action login a user: ${logInDto.login}`);
     const entity = await this.userService.findOneBy({ login: logInDto.login });
     if (!entity) {
       throw new ForbiddenException('no user with such login');
@@ -65,7 +64,9 @@ export class AuthService {
   }
 
   async refresh(refreshToken: string) {
-    this.logger.log(`This action refresh a token: ${refreshToken}`);    
+    this.logger.log(
+      `This action refresh a token: ${refreshToken.substring(0, 12)}... `,
+    );
     let jwtPayloadDto: JwtPayloadDto;
 
     try {
@@ -73,7 +74,10 @@ export class AuthService {
         secret: this.refreshTokenOptions.secret,
       });
     } catch (error) {
-      console.log('error', error.message);
+      // console.error('error error: ', error);
+      // this.logger.error(error.message, error.trace, error.reason)
+      // this.logger.error(error);
+      this.logger.logException(error);
       if (error.name === 'JsonWebTokenError') {
         throw new ForbiddenException(error);
       }
@@ -81,8 +85,6 @@ export class AuthService {
         throw new ForbiddenException(error);
       }
     }
-
-    // compare login
 
     return await this.generateTokenPair({
       userId: jwtPayloadDto.userId,

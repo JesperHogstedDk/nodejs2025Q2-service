@@ -1,4 +1,9 @@
-import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -26,7 +31,7 @@ export class UserService {
     /**
      * This check cannot work with the provided version of test:auth
      * as that test does not expects login to unique
-     * in production that check should even be moved to a database constraint 
+     * in production that check should even be moved to a database constraint
      */
     // const entity = await this.findOneBy({ login: createUserDto.login });
     // if (entity) {
@@ -42,9 +47,9 @@ export class UserService {
       updatedAt: date,
     });
     await this.userRepository.save(user);
-    const { password, ...result } = user;
-    return instanceToPlain(user)
-    return result;
+    // const { password, ...result } = user;
+    return instanceToPlain(user);
+    // return result;
   }
 
   async findAll() {
@@ -69,8 +74,10 @@ export class UserService {
   }
 
   async update(id: string, updatePasswordDto: UpdatePasswordDto) {
-    this.logger.log(`This XXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx action updates a #${id} user`);
-  
+    this.logger.log(
+      `This action updates a #${id} user`,
+    );
+
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       return null;
@@ -81,12 +88,9 @@ export class UserService {
       user.password = await this.hashPassword(updatePasswordDto.newPassword);
       user.updatedAt = Date.now();
       user.version += 1;
-      const { password, ...userWithoutPassword } =
-        await this.userRepository.save(user);
+      await this.userRepository.save(user);
 
-        throw new HttpException("øøøps",HttpStatus.BAD_REQUEST,{cause: 'ikke godt', description:'blblblblbllla'});
-        
-      return userWithoutPassword;
+      return instanceToPlain(user);
     } else {
       throw new ForbiddenException('Incorrect old password');
     }
