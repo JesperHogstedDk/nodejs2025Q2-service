@@ -47,7 +47,7 @@ export class AuthController {
       throw new UnauthorizedException('No refresh token provided');
     }
     this.logger.log(
-      `This refresh: ${body.refreshToken.substring(0, 12)}...} action return a new tokens`,
+      `This refresh: ${body.refreshToken.substring(0, 12)}... action return a new tokens`,
     );
 
     return await this.authService.refresh(body.refreshToken);

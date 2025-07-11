@@ -21,11 +21,14 @@ export class AuthService {
     private jwtService: JwtService,
     private readonly userService: UserService,
   ) {
+    
     logger.setContext('AuthService');
+
     this.accessTokenOptions = {
       expiresIn: process.env.TOKEN_EXPIRE_TIME ?? '1h',
       secret: process.env.JWT_SECRET_KEY ?? 'secret123123',
     };
+
     this.refreshTokenOptions = {
       expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME ?? '24h',
       secret: process.env.JWT_SECRET_REFRESH_KEY ?? 'secret123123',
@@ -57,7 +60,7 @@ export class AuthService {
     );
 
     if (!isAllowed) {
-      throw new UnauthorizedException("password doesn't match actual done");
+      throw new UnauthorizedException("login or password doesn't match");
     }
 
     return this.generateTokenPair({ userId: entity.id, login: entity.login });

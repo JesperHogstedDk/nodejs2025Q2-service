@@ -15,6 +15,7 @@ import { Track } from './track/entities/track.entity';
 import { TrackModule } from './track/track.module';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
+import { FileModule } from './file/file.module';
 
 dotenv.config();
 
@@ -52,6 +53,7 @@ console.log(
     AuthModule,
     JwtModule,
     LogModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
