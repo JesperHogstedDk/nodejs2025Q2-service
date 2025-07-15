@@ -5,15 +5,20 @@ import { Artist } from './entities/artist.entity';
 import { randomUUID } from 'node:crypto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { LogService } from 'src/log/log.service';
 
 @Injectable()
 export class ArtistService {
   constructor(
     @InjectRepository(Artist)
     private readonly artistRepository: Repository<Artist>,
-  ) {}
+    private readonly logger: LogService,
+  ) {
+    logger.setContext('ArtistService');
+  }
 
   async create(createArtistDto: CreateArtistDto) {
+    this.logger.verbose('Tester');
     const artist = new Artist();
     artist.id = randomUUID();
     artist.name = createArtistDto.name;

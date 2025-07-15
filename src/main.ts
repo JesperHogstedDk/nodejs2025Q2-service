@@ -34,7 +34,7 @@ async function bootstrap() {
   SwaggerModule.setup('doc', app, document);
 
   process.on('uncaughtException', (error) => {
-    logger.logException(error, 'Bootstrap');
+    logger.logException(error, 'UncaughtException');
   });
 
   process.on('unhandledRejection', (reason, promise) => {

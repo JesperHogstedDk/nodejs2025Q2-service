@@ -1,17 +1,12 @@
-import {
-  ForbiddenException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { compareSync, genSalt, hash } from 'bcrypt';
+import { instanceToPlain } from 'class-transformer';
+import { LogService } from 'src/log/log.service';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './entities/user.entity';
-import { compareSync, genSalt, hash } from 'bcrypt';
-import { LogService } from 'src/log/log.service';
-import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class UserService {
@@ -26,18 +21,17 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    this.logger.log('This action adds a new user');
+    this.logger.log(`This action adds a new user`, createUserDto.login);
 
     /**
-     * This check cannot work with the provided version of test:auth
+     * The findOneBy check below cannot work with the provided version of test:auth
      * as that test does not expects login to unique
      * in production that check should even be moved to a database constraint
      */
-    // const entity = await this.findOneBy({ login: createUserDto.login });
-    // if (entity) {
-    //   throw new ForbiddenException('user allready exists');
-    // }
-
+    const entity = await this.findOneBy({ login: createUserDto.login });
+    if (entity) {
+      // throw new ForbiddenException('user allready exists');
+    }
     const hashedPasword = await this.hashPassword(createUserDto.password);
     const date = Date.now();
     const user = new User({
@@ -74,9 +68,7 @@ export class UserService {
   }
 
   async update(id: string, updatePasswordDto: UpdatePasswordDto) {
-    this.logger.log(
-      `This action updates a #${id} user`,
-    );
+    this.logger.log(`This action updates a #${id} user`);
 
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {

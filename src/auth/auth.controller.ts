@@ -33,7 +33,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(@Body() loginDto: LogInDto): Promise<JwtTokensResponseDto> {
-    this.logger.log('This login action signup a new user');
+    this.logger.log('This login action login a user');
     return await this.authService.login(loginDto);
   }
 
@@ -47,7 +47,7 @@ export class AuthController {
       throw new UnauthorizedException('No refresh token provided');
     }
     this.logger.log(
-      `This refresh: ${body.refreshToken.substring(0, 12)}... action return a new tokens`,
+      `This refresh: ${body.refreshToken.substring(0, 12)}... action return new tokens`,
     );
 
     return await this.authService.refresh(body.refreshToken);

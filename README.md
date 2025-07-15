@@ -86,6 +86,9 @@ See the Swagger documentation for a complete overview of all endpoints and their
 ## Logging
 See logs in the console and in log files (and error log files)   
 WARNING: running with environment variable LOG_LEVEL set to debug will reveal password
+Logging are done according to the loglevel excluding entries in this order: verbose=>debug=>log=>warn=>error=>fatal
+Example: verbose will log everything, debug will log everything but verbose, error will log error and fatal and fatl will only log fatal.
+
 
 ## Testing
 
@@ -95,6 +98,12 @@ Also you can run end-to-end test. (Make sure api is up and running)
    npm run test:auth
    npm run test:refresh
    ```
+
+To run only specific test suite with authorization
+```
+npm run test:auth -- <path to suite>  
+```
+
 In case test partly fails, it might corrupt the database, clean all tables specially or at least user except migrations and try again.  
 In some case it might help to clean the dist folder (prebuild), re-build and even the node modules folder.
 

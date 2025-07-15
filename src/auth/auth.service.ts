@@ -21,14 +21,11 @@ export class AuthService {
     private jwtService: JwtService,
     private readonly userService: UserService,
   ) {
-    
     logger.setContext('AuthService');
-
     this.accessTokenOptions = {
       expiresIn: process.env.TOKEN_EXPIRE_TIME ?? '1h',
       secret: process.env.JWT_SECRET_KEY ?? 'secret123123',
     };
-
     this.refreshTokenOptions = {
       expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME ?? '24h',
       secret: process.env.JWT_SECRET_REFRESH_KEY ?? 'secret123123',
@@ -49,6 +46,14 @@ export class AuthService {
 
   async login(logInDto: LogInDto) {
     this.logger.log(`This action login a user: ${logInDto.login}`);
+
+    // this.logger.log(`Verifies an existing user's login and returns access token ${logInDto.login}`);
+    // this.logger.warn(`Verifies an existing user's login and returns access token: ${JSON.stringify(logInDto.login)}`);
+    // this.logger.error(`Verifies an existing user's login and returns access token: ${logInDto.login}`);
+    // this.logger.fatal(`Verifies an existing user's login and returns access token: ${logInDto.login}`);
+    // this.logger.debug(`Verifies an existing user's login and returns access token: ${logInDto.login}`);
+    // this.logger.verbose(`Verifies an existing user's login and returns access token: ${logInDto.login}`);
+
     const entity = await this.userService.findOneBy({ login: logInDto.login });
     if (!entity) {
       throw new ForbiddenException('no user with such login');

@@ -1,57 +1,71 @@
 import { ConsoleLogger, Injectable, Scope, LogLevel } from '@nestjs/common';
+import { FileService } from 'src/file/file.service';
 import * as util from 'util';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class LogService extends ConsoleLogger {
-  constructor() {
+  constructor(private readonly fileService: FileService) {
     super();
     const levels = process.env.LOG_LEVEL?.split(',') ?? [
-      'log',
-      'error',
-      'warn',
-      'debug',
       'verbose',
+      'debug',
+      'log',
+      'warn',
+      'error',
+      'fatal',
     ];
     this.setLogLevels(levels as LogLevel[]);
+    console.log('LogService env log level(s): ', levels);
   }
 
-  log(message: unknown) {
-    const formatted = this.format('LOG', message, 'green');
-    super.log(formatted);
+  log(message: unknown, ...optionalParams: any[]) {
+    super.log(message, ...optionalParams);
+    this.fileService.log(this.formatForFile('LOG', message));
   }
 
-  warn(message: unknown, context?: string) {
-    const formatted = this.format('WARN', message, 'yellow');
-    if (!formatted) return;
-    super.warn(formatted, context);
+  warn(message: unknown) {
+    super.warn(message);
+    this.fileService.log(this.formatForFile('WARN', message));
   }
 
-  error(message: unknown, trace?: string) {
-    const formatted = this.format('ERROR', message, 'red');
-    if (!formatted) return;
-    super.error(formatted + (trace ? `\n${trace}` : ''));
+  error(message: unknown, stack?: string, context?: string) {
+    const stackOrContext =
+      (stack ? `\n${stack}` : '') + (context ? `\n${context}` : '');
+    // super.error(message, stack, context);
+    // super.error(message, stackOrContext);
+    // super.error(message, stack);
+    if (stack && context) {
+      super.error(message, stack, context);
+    } else if (stack) {
+      super.error(message, stack);
+    } else {
+      super.error(message);
+    }
+
+    this.fileService.log(this.formatForFile('ERROR', message + stackOrContext));
   }
 
-  debug(message: unknown) {
-    const formatted = this.format('DEBUG', message, 'blue');
-    if (!formatted) return;
-    super.debug(formatted);
+  debug(message: unknown, context?: string) {
+    super.debug(message, context);
+    super.debug(message);
+    this.fileService.log(this.formatForFile('DEBUG', message));
   }
 
   verbose(message: unknown) {
-    const formatted = this.format('VERBOSE', message, 'magenta');
-    if (!formatted) return;
-    super.verbose(formatted);
+    super.verbose(message);
+    this.fileService.log(this.formatForFile('VERBOSE', message));
   }
 
   logException(error: unknown, context?: string) {
-    const resolvedContext = context ?? 'ExceptionHandler';
+    const resolvedContext = context ?? this.context; // ?? 'ExceptionHandler';
 
     if (error instanceof Error) {
       const message = `${error.name}: ${error.message}`;
       const fullError = util.inspect(error, { depth: null });
-      super.error(message, error.stack, resolvedContext);
-      super.debug(`Full error:\n${fullError}`, resolvedContext);
+      // super.error(message, error.stack, resolvedContext);
+      this.error(message, error.stack, resolvedContext);
+      // super.debug(`Full error:\n${fullError}`, resolvedContext);
+      this.debug(`Full error: ${fullError}`, resolvedContext);
     } else {
       const fallback =
         typeof error === 'object'
@@ -62,31 +76,12 @@ export class LogService extends ConsoleLogger {
     }
   }
 
-  private format(
-    level: string,
-    message: unknown,
-    color: 'red' | 'green' | 'yellow' | 'blue' | 'magenta',
-  ): string | null {
-    const colors: Record<string, string> = {
-      red: '\x1b[31m',
-      green: '\x1b[32m',
-      yellow: '\x1b[33m',
-      blue: '\x1b[34m',
-      magenta: '\x1b[35m',
-      reset: '\x1b[0m',
-    };
-
-    if (!this.hasContent(message)) return null;
-
+  private formatForFile(level: string, message: unknown): string | null {
     const parsed =
       typeof message === 'object'
         ? util.inspect(message, { depth: null })
         : String(message);
 
-    return `${colors[color]}[${level}]${colors.reset} ${parsed}`;
-  }
-
-  private hasContent(value: unknown): boolean {
-    return !(value === undefined || value === null || value === '');
+    return `${this.getTimestamp()} [${level}] [${this.context}] ${parsed} `;
   }
 }
