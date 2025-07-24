@@ -18,22 +18,32 @@ export class LogService extends ConsoleLogger {
     console.log('LogService env log level(s): ', levels);
   }
 
+  private fileMessage(message: unknown, level: LogLevel) {
+    if (this.isLevelEnabled(level)) {
+      this.fileService.writeToFile(this.formatForFile(level.toUpperCase(), message));
+    }
+  }
+
+  private formatForFile(level: string, message: unknown): string | null {
+    const parsed =
+      typeof message === 'object'
+        ? util.inspect(message, { depth: null })
+        : String(message);
+
+    return `${this.getTimestamp()} [${level}] [${this.context}] ${parsed} `;
+  }
+
   log(message: unknown, ...optionalParams: any[]) {
     super.log(message, ...optionalParams);
-    this.fileService.log(this.formatForFile('LOG', message));
+    this.fileMessage(message, 'log');
   }
 
   warn(message: unknown) {
     super.warn(message);
-    this.fileService.log(this.formatForFile('WARN', message));
+    this.fileMessage(message, 'warn');
   }
 
   error(message: unknown, stack?: string, context?: string) {
-    const stackOrContext =
-      (stack ? `\n${stack}` : '') + (context ? `\n${context}` : '');
-    // super.error(message, stack, context);
-    // super.error(message, stackOrContext);
-    // super.error(message, stack);
     if (stack && context) {
       super.error(message, stack, context);
     } else if (stack) {
@@ -41,19 +51,30 @@ export class LogService extends ConsoleLogger {
     } else {
       super.error(message);
     }
+    const stackOrContext =
+      (stack ? `\n${stack}` : '') + (context ? `\n${context}` : '');
 
-    this.fileService.log(this.formatForFile('ERROR', message + stackOrContext));
+    this.fileMessage(message + stackOrContext, 'error');
   }
 
   debug(message: unknown, context?: string) {
-    super.debug(message, context);
-    super.debug(message);
-    this.fileService.log(this.formatForFile('DEBUG', message));
+    if (context) {
+      super.debug(message, context);
+    } else {
+      super.debug(message);
+    }
+    this.fileMessage(message, 'debug');
   }
 
   verbose(message: unknown) {
     super.verbose(message);
-    this.fileService.log(this.formatForFile('VERBOSE', message));
+    // this.fileService.writeToFile(this.formatForFile('VERBOSE', message));
+    this.fileMessage(message, 'verbose');
+  }
+
+  fatal(message: unknown, context?: string) {
+    super.fatal(message);
+    this.fileMessage(message, 'fatal');
   }
 
   logException(error: unknown, context?: string) {
@@ -65,23 +86,18 @@ export class LogService extends ConsoleLogger {
       // super.error(message, error.stack, resolvedContext);
       this.error(message, error.stack, resolvedContext);
       // super.debug(`Full error:\n${fullError}`, resolvedContext);
-      this.debug(`Full error: ${fullError}`, resolvedContext);
+      if (this.isLevelEnabled('debug')) {
+        this.debug(`Full error: ${fullError}`, resolvedContext);
+      }
     } else {
       const fallback =
         typeof error === 'object'
           ? JSON.stringify(error, null, 2)
           : String(error);
       super.error('Non-Error exception thrown', undefined, resolvedContext);
-      super.debug(`Thrown value:\n${fallback}`, resolvedContext);
+      if (this.isLevelEnabled('debug')) {
+        super.debug(`Thrown value:\n${fallback}`, resolvedContext);
+      }
     }
-  }
-
-  private formatForFile(level: string, message: unknown): string | null {
-    const parsed =
-      typeof message === 'object'
-        ? util.inspect(message, { depth: null })
-        : String(message);
-
-    return `${this.getTimestamp()} [${level}] [${this.context}] ${parsed} `;
   }
 }

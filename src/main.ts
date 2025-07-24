@@ -23,7 +23,7 @@ async function bootstrap() {
   });
   const logger = await app.resolve(LogService);
   logger.setContext('home-library-service');
-  // app.useLogger(logger);
+  app.useLogger(logger);
 
   app.useGlobalInterceptors(new RequestResponseLoggerInterceptor(logger));
   app.useGlobalFilters(new AllExceptionsFilter(logger));
