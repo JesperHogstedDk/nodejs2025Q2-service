@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, LogLevel } from '@nestjs/common';
 import * as fsPromises from 'node:fs/promises';
 import * as path from 'node:path';
 
 @Injectable()
 export class FileService {
+
   private maxSize: number;
   private logsFolder: string;
   private logFile: string = 'log.txt';
+  private errorFile: string = 'error.txt';
 
   constructor() {
     this.maxSize = Number(process.env.MAX_SIZE ?? 5) * 1024;
@@ -14,7 +16,7 @@ export class FileService {
     // this.createDirectory(this.logsFolder);
   }
 
-  async createDirectory(logsFolder: string) {
+  private async createDirectory(logsFolder: string) {
     try {
       const logFolderPath = path.resolve(logsFolder);
       const logDir = await fsPromises.mkdir(logFolderPath, { recursive: true });
@@ -28,8 +30,8 @@ export class FileService {
     }
   }
 
-  
-  async existLogsFolder(logsFolder: string): Promise<boolean> {
+
+  private async existLogsFolder(logsFolder: string): Promise<boolean> {
     try {
       await fsPromises.access(logsFolder, fsPromises.constants.F_OK)
       return true;
@@ -38,7 +40,7 @@ export class FileService {
     }
   }
 
-  async existsFile(filePath: string): Promise<boolean> {
+  private async existsFile(filePath: string): Promise<boolean> {
     try {
       await fsPromises.access(filePath);
       return true;
@@ -51,7 +53,7 @@ export class FileService {
     try {
       const stats = await fsPromises.stat(logsFile)
       if (stats.size > this.maxSize) {
-        console.log('Logfile size: ', stats.size)
+        console.log('Logfile size: ', stats.size, 'rotating...')
         return true
       } else {
         return false
@@ -62,10 +64,12 @@ export class FileService {
     }
   }
 
-  private async renameLogsFile(logsFilePath: string) {
+  private async renameLogsFile(logsFilePath: string, level: LogLevel) {
     const oldFile = logsFilePath;
     const date = new Date().toISOString().replace(':', '').replace(':', '');
-    const newFile = path.join(this.logsFolder, date + '.' + this.logFile);
+    const newFile = level === 'error' ?
+    path.join(this.logsFolder, date + '.' + this.errorFile):  
+    path.join(this.logsFolder, date + '.' + this.logFile);
     try {
       if (await this.existsFile(oldFile)) {
         await fsPromises.rename(oldFile, newFile);
@@ -77,8 +81,10 @@ export class FileService {
     // console.log(`File renamed from ${this.logFile} to ${newFile} successfully.`);
   }
 
-  async writeToFile(message: string) {
-    const logsFile = path.resolve(this.logsFolder, this.logFile);
+  async writeToFile(message: string, level: LogLevel = undefined) {
+    const logsFile = level === 'error' ?
+      path.resolve(this.logsFolder, this.errorFile) :
+      path.resolve(this.logsFolder, this.logFile);
 
     if (!(await this.existLogsFolder(this.logsFolder))) {
       await this.createDirectory(this.logsFolder)
@@ -89,7 +95,7 @@ export class FileService {
     }
 
     if (await this.isFileMaxSize(logsFile)) {
-      await this.renameLogsFile(logsFile);
+      await this.renameLogsFile(logsFile, level);
     }
 
     try {
@@ -97,5 +103,9 @@ export class FileService {
     } catch (error) {
       console.log('LogFile exception: ', error);
     }
+  }
+
+  async writeToErrorFile(message: string) {
+    this.writeToFile(message, 'error');
   }
 }

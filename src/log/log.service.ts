@@ -18,9 +18,12 @@ export class LogService extends ConsoleLogger {
     console.log('LogService env log level(s): ', levels);
   }
 
-  private fileMessage(message: unknown, level: LogLevel) {
+  private async fileMessage(message: unknown, level: LogLevel, stack: string = undefined) {
     if (this.isLevelEnabled(level)) {
-      this.fileService.writeToFile(this.formatForFile(level.toUpperCase(), message));
+      if (level === 'error') {
+        await this.fileService.writeToErrorFile(this.formatForFile(level.toUpperCase(), message + stack));
+      }
+      await this.fileService.writeToFile(this.formatForFile(level.toUpperCase(), message));
     }
   }
 
@@ -54,7 +57,7 @@ export class LogService extends ConsoleLogger {
     const stackOrContext =
       (stack ? `\n${stack}` : '') + (context ? `\n${context}` : '');
 
-    this.fileMessage(message + stackOrContext, 'error');
+    this.fileMessage(message, 'error', stackOrContext);
   }
 
   debug(message: unknown, context?: string) {
@@ -82,9 +85,10 @@ export class LogService extends ConsoleLogger {
 
     if (error instanceof Error) {
       const message = `${error.name}: ${error.message}`;
+      this.error(message, error.stack, resolvedContext);
       const fullError = util.inspect(error, { depth: null });
       // super.error(message, error.stack, resolvedContext);
-      this.error(message, error.stack, resolvedContext);
+      // this.error(message, error.stack, resolvedContext);
       // super.debug(`Full error:\n${fullError}`, resolvedContext);
       if (this.isLevelEnabled('debug')) {
         this.debug(`Full error: ${fullError}`, resolvedContext);

@@ -33,8 +33,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const errorStack = exception instanceof Error ? exception.stack : '';
 
     this.logger.error(
-      `[EXCEPTION] ${request.method} ${request.url} - Status: ${status}`,
-      errorStack,
+      `[EXCEPTION] ${request.method} ${request.url} - Status: ${status} - Message: ${message}`,
+      errorStack , 
     );
 
     response.status(status).json({
